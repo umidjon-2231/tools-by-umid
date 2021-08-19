@@ -9,9 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "availity-reactstrap-validation": "^2.7.1",
+    "bootstrap": "4.3.1",
     "next": "11.1.0",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "reactstrap": "^8.9.0"
+
   },
   "devDependencies": {
     "eslint": "7.32.0",
