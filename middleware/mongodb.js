@@ -1,7 +1,8 @@
-import mongoose from 'mongoose';
+// import mongoose from 'mongoose';
+const mongoose=require('mongoose')
 
 const connectDB = handler => async (req, res) => {
-    if (mongoose.connections[0].readyState) {
+    if (mongoose.connections[0].readyState==1 || mongoose.connections[0].readyState==2) {
         // Use current db connection
         return handler(req, res);
     }

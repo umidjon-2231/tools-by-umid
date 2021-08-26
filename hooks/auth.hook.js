@@ -24,21 +24,19 @@ export const useAuth=()=>{
 
     const logout=useCallback(()=>{
         setToken(null)
-
         localStorage.removeItem(storageName)
         router.push('/')
     }, [])
     useEffect(()=>{
         const data=JSON.parse(localStorage.getItem(storageName))
-
         if(data && data.token){
             try {
                 const verify=jwt.verify(data.token, 'Umidjon2231')
                 login(data.token, verify.password)
             }catch (e) {
                 if(router.pathname!=='/'){
-                    router.push('/')
                     toast.error("Your token expired, please repeat password")
+                    router.push('/')
                 }
             }
 

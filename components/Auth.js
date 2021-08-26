@@ -5,12 +5,16 @@ import {useAuth} from "../hooks/auth.hook"
 import Loader from "../components/Loader"
 import {useRouter} from "next/router"
 import {toast} from "react-toastify"
+import connectDB from "../middleware/mongodb"
 
 
 export default function Auth() {
     const {loading, error, request}=useHttp()
     const auth=useAuth()
     const router=useRouter()
+    useEffect(()=>{
+        connectDB()
+    }, [])
 
 
     const loginHandler=async (events, value)=>{
@@ -44,7 +48,10 @@ export default function Auth() {
                                 <AvInput type="password" name="password" placeholder="Password"/>
                             </div>
                             <div className="card-footer py-1">
-                                <button className="btn btn-light border-success d-block ml-auto" type="submit">Login</button>
+                                <button disabled={loading}
+                                        className="btn btn-light border-success d-block ml-auto"
+                                        type="submit"
+                                >Login</button>
                             </div>
                         </AvForm>
 

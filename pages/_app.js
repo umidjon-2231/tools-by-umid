@@ -13,6 +13,7 @@ import { css } from "@emotion/react";
 import React, {useState, useEffect} from "react"
 import {AuthContext} from "../context/AuthContext"
 import {useAuth} from "../hooks/auth.hook"
+import connectDB from "../middleware/mongodb"
 
 
 const override = css`
@@ -27,9 +28,23 @@ const override = css`
 function MyApp({ Component, pageProps }) {
     const [loading, setLoading]=useState(true);
     const {token, login, userId, logout, ready}=useAuth()
+    const jwt=require('jsonwebtoken')
+
 
     useEffect(()=>{
         setLoading(false)
+
+        setInterval(()=>{
+            if(!!token){
+                console.log("Check")
+                try {
+                    const verify=jwt.verify(token, 'Umidjon2231')
+                }catch (e) {
+                    logout()
+                }
+            }
+        }, 5000)
+
     }, [])
 
 
