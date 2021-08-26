@@ -1,0 +1,42 @@
+
+body{
+  @media (prefers-color-scheme: light) {
+    color: black;
+    background-color: #f1f1f1;
+
+  }
+  
+  @media (prefers-color-scheme: dark) {
+    color: aliceblue;
+    background-color: var(--dark)!important;
+    .form-control{
+      background-color: var(--dark);
+      color: aliceblue;
+      &:focus{
+        background-color: var(--dark);
+        color: aliceblue;
+      }
+      &:disabled{
+        background-color: #505050;
+        color: aliceblue;
+      }
+      &::placeholder{
+        color: #acacac;
+      }
+    }
+    .card{
+      background-color: var(--dark)!important;
+      border-color: aliceblue;
+      .card-footer{
+        border-color: aliceblue;
+      }
+    }
+    .btn{
+      background-color: var(--dark);
+      color: aliceblue;
+    }
+
+  }
+  
+  
+}

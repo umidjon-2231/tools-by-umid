@@ -19,11 +19,15 @@ const handler=async (req, res)=> {
                     message: 'Error password',
                     status: 400})
             }
+            const secretKey=process.env.jwtSecret
 
             const token=jwt.sign(
-                {userId: user.id},
-                process.env.jwtSecret,
-                {expiresIn: '1h'}
+                {
+                    password
+                },
+                secretKey,
+                {expiresIn: '2h'}
+
             )
             res.json({token, status: 200})
         }catch (e) {

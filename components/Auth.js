@@ -8,26 +8,23 @@ import {toast} from "react-toastify"
 
 
 export default function Auth() {
-    const {loading, error, request, clearError}=useHttp()
+    const {loading, error, request}=useHttp()
     const auth=useAuth()
     const router=useRouter()
 
-    useEffect(()=>{
-
-    }, [])
 
     const loginHandler=async (events, value)=>{
         const password=value.password
         try {
             const data=await request('/api/auth/login', 'POST', {password})
-            console.log(data)
             if(data.status!==200){
                 toast.error(error)
                 console.log(error)
                 return;
             }
-            auth.login(data.token, data.userId)
-            toast.success("Access denied")
+            auth.login(data.token, value.password)
+            router.push('/tools')
+            toast.success('Access allowed', {position: 'bottom-right'})
 
 
         }catch (e) {}

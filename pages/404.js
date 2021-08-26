@@ -1,13 +1,14 @@
 import React from 'react';
+import Link from "next/link"
 
 const Custom404 = () => {
     return (
         <div>
-            <a href="/">
+            <Link href="/">
                 <div className="container">
                     <div className="row">
-                        <div className="col-sm-12 col-md-12 mt-5 mb-5">
-                            <svg width="100%" height="auto" viewBox="0 0 636 324" fill="none"
+                        <div className="col-sm-12 col-md-12 ">
+                            <svg width="100%" height="100vh" viewBox="0 0 636 324" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <g id="OBJECTS">
                                     <g id="Group">
@@ -642,7 +643,7 @@ const Custom404 = () => {
                         </div>
                     </div>
                 </div>
-            </a>
+            </Link>
         </div>
     );
 };

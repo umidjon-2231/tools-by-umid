@@ -1,36 +1,53 @@
 import {useState, useCallback, useEffect} from 'react'
+import {useRouter} from "next/router"
+import {useCheckToken} from "./checkToken"
+import {toast} from "react-toastify"
+const jwt=require('jsonwebtoken')
 
-const storageName='userData'
+const storageName=process.env.storageName
 
 
 export const useAuth=()=>{
     const [token, setToken]=useState(null)
+    const [password, setPassword]=useState('')
     const [ready, setReady]=useState(false)
-    const [userId, setUserId]=useState(null)
 
-    const login=useCallback((jwtToken, id)=>{
+    const router=useRouter()
+
+    const login=useCallback((jwtToken, password)=>{
         setToken(jwtToken)
-        setUserId(id)
+        setPassword(password)
 
-        localStorage.setItem(storageName, JSON.stringify({userId: id, token: jwtToken}))
+        localStorage.setItem(storageName, JSON.stringify({token: jwtToken}))
 
     }, [])
+
     const logout=useCallback(()=>{
         setToken(null)
-        setUserId(null)
 
         localStorage.removeItem(storageName)
+        router.push('/')
     }, [])
     useEffect(()=>{
         const data=JSON.parse(localStorage.getItem(storageName))
 
         if(data && data.token){
-            login(data.token, data.userId)
+            try {
+                const verify=jwt.verify(data.token, 'Umidjon2231')
+                login(data.token, verify.password)
+            }catch (e) {
+                if(router.pathname!=='/'){
+                    router.push('/')
+                    toast.error("Your token expired, please repeat password")
+                }
+            }
+
+
         }
         setReady(true)
 
     }, [login])
 
 
-    return {login, logout, token, userId, ready}
+    return {login, logout, token, ready, password}
 }

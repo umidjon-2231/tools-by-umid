@@ -28,40 +28,21 @@ function MyApp({ Component, pageProps }) {
     const [loading, setLoading]=useState(true);
     const {token, login, userId, logout, ready}=useAuth()
 
-    const isAuthenticated=!!token
     useEffect(()=>{
-        // startMongo()
         setLoading(false)
-    }, [Component])
+    }, [])
 
-    const startMongo= async ()=>{
-        try {
-            await mongoose.connect(process.env.mongoUrl, {
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
-                useCreateIndex: true
-            })
-        }catch (e) {
-            console.log(e.message)
-        }
-
-
-    }
 
 
 
   return (
       <>
-          {loading? <div className="loader">
-              <ScaleLoader color={"#343A40"} css={override} loading={true} size={"2000px"}/>
-          </div>:""}
-          {/*<AuthContext.Provider value={{*/}
-          {/*    token, login, logout, userId, isAuthenticated*/}
-          {/*}}>*/}
+          {/*{loading? <div className="loader">*/}
+          {/*    <ScaleLoader color={"#343A40"} css={override} loading={true} size={"2000px"}/>*/}
+          {/*</div>:""}*/}
 
 
           <Component  ponent {...pageProps} />
-          {/*</AuthContext.Provider>*/}
           <ToastContainer/>
 
       </>

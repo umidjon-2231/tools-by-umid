@@ -3,18 +3,15 @@ import {AuthContext} from "../context/AuthContext"
 import Loader from "../components/Loader"
 import Auth from "../components/Auth"
 import {useRouter} from "next/router"
+import {useCheckToken} from "../hooks/checkToken"
 
 export default function Home() {
   const {token, login, userId, logout, ready}=useAuth()
-  const isAuthenticated=!!token
+
   const router=useRouter()
-
-
-  if(!ready){
-    return <Loader/>
+  useCheckToken()
+  if(token!==null){
+    router.push("/tools")
   }
-  if(!!token){
-  router.push("/tools")
-  }
-  return (<Auth/>);
+  return <Auth/>;
 }
