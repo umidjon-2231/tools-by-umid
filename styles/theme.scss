@@ -1,13 +1,22 @@
+//@import "main";
+
+:root{
+  --light: aliceblue!important;
+}
+
 
 body{
   @media (prefers-color-scheme: light) {
-    color: black;
+    color: var(--dark);
     background-color: #f1f1f1;
-
+    //.custom-card{
+    //  border-color: var(--dark);
+    //}
   }
+
   
   @media (prefers-color-scheme: dark) {
-    color: aliceblue;
+    color: var(--light);
     background-color: var(--dark)!important;
     .form-control{
       background-color: var(--dark);
@@ -31,12 +40,22 @@ body{
         border-color: aliceblue;
       }
     }
-    .btn{
-      background-color: var(--dark);
-      color: aliceblue;
-    }
 
+    .modal-content{
+      background-color: var(--dark);
+    }
+    .custom-card{
+      &:hover{
+        background-color: #23272b;
+        box-shadow: 5px 5px 10px #000;
+      }
+    }
+    &:focus{
+      background-color: #23272b;
+    }
   }
-  
-  
 }
+
+
+
+

@@ -1,3 +1,37 @@
+@import "~bootstrap/dist/css/bootstrap.min.css";
+
 body{
-  background-color: #f1f1f1;
+
 }
+
+.homepage{
+  height: 100vh;
+  overflow-y: hidden;
+  .content{
+    padding: 0 10px 0 10px;
+    height: 75vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    .custom-card{
+      height: 100%;
+      width: 100%;
+      border-width: 1px;
+      border-style: solid;
+      border-radius: 10px;
+      border-color: var(--primary);
+      padding: 10px 20px 10px 20px;
+      cursor: pointer;
+      .body{
+        height: 90%;
+        display: flex;
+        align-items: center;
+      }
+      img{
+        width: 100%;
+      }
+    }
+  }
+}
+
+
+@import "theme";

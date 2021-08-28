@@ -1,5 +1,4 @@
 const jwt=require('jsonwebtoken')
-const config=require('config')
 const User=require('../../../models/user')
 import connectDB from "../../../middleware/mongodb"
 
@@ -13,11 +12,11 @@ const handler=async (req, res)=> {
                 return res.status(400).json({message: "Error password", status: 400})
             }
 
-            if(password!==user.password){
-                return res.status(400).json({
-                    message: 'Error password',
-                    status: 400})
-            }
+            // if(password!==user.password){
+            //     return res.status(400).json({
+            //         message: 'Error password',
+            //         status: 400})
+            // }
             const secretKey=process.env.jwtSecret
 
             const token=jwt.sign(
@@ -25,7 +24,7 @@ const handler=async (req, res)=> {
                     password
                 },
                 secretKey,
-                {expiresIn: '60000'}
+                {expiresIn: '2h'}
             )
             res.json({token, status: 200})
         }catch (e) {

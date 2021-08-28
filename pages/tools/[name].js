@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useAuth} from "../../hooks/auth.hook"
 import Auth from "../../components/Auth"
 import {useRouter} from "next/router"
-import Vinejer from "../../components/tools/Vinejer"
+import Decoder from "../../components/tools/Decoder"
 import LinkSave from "../../components/tools/LinkSave"
 import Custom404 from "../404"
 import Secrets from "../../components/tools/Secrets"
@@ -10,10 +10,13 @@ import Secrets from "../../components/tools/Secrets"
 const Name = () => {
     const router=useRouter()
     const {token}=useAuth()
+    useEffect(()=>{
+
+    })
     if(token!==null){
         switch (router.query.name) {
-            case "vinejer": {
-                return <Vinejer/>
+            case "vijener": {
+                return <Decoder/>
             }
             case "link-save": {
                 return <LinkSave/>

@@ -1,19 +1,23 @@
-import React, {useEffect} from "react"
+import React, {useEffect, useState} from "react"
 import {AvForm, AvInput} from "availity-reactstrap-validation"
 import {useHttp} from "../hooks/https.hook"
 import {useAuth} from "../hooks/auth.hook"
 import Loader from "../components/Loader"
 import {useRouter} from "next/router"
 import {toast} from "react-toastify"
-import connectDB from "../middleware/mongodb"
+import {useThemeDetector} from "../toolsOfProject"
 
 
 export default function Auth() {
+    const [darkTheme, setDarkTheme]=useState(false)
     const {loading, error, request}=useHttp()
     const auth=useAuth()
     const router=useRouter()
+    const {isDarkTheme}=useThemeDetector()
+
     useEffect(()=>{
-        connectDB()
+
+
     }, [])
 
 
@@ -26,8 +30,9 @@ export default function Auth() {
                 console.log(error)
                 return;
             }
-            auth.login(data.token, value.password)
             router.push('/tools')
+            auth.login(data.token, value.password)
+
             toast.success('Access allowed', {position: 'bottom-right'})
 
 
@@ -38,7 +43,7 @@ export default function Auth() {
     }
     return (
         <div className="container">
-            <h1 className="mt-5 text-center ">Tools of Umid</h1>
+            <h1 className="mt-5 text-center">Tools of Umid</h1>
             <div className=" col-10 mx-auto my-4 bg-info" style={{height: "2px"}}/>
             <div className="row">
                 <div className="col-sm-4 col-12 col-md-8 col-lg-4 offset-md-2 offset-lg-4">
@@ -49,7 +54,7 @@ export default function Auth() {
                             </div>
                             <div className="card-footer py-1">
                                 <button disabled={loading}
-                                        className="btn btn-light border-success d-block ml-auto"
+                                        className={`btn ${isDarkTheme?'btn-dark':'btn-light'} border-success d-block ml-auto`}
                                         type="submit"
                                 >Login</button>
                             </div>

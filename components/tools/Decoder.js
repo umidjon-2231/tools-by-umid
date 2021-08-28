@@ -1,11 +1,11 @@
 import React from 'react';
 
-const Vinejer = () => {
+const Decoder = () => {
     return (
         <div>
-            Vinejer
+            Decoder
         </div>
     );
 };
 
-export default Vinejer;
+export default Decoder;

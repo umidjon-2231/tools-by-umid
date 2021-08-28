@@ -1,25 +1,15 @@
-import "bootstrap/dist/css/bootstrap.css";
+
 import "../styles/main.scss"
-import "../styles/theme.scss"
+// import "../styles/theme.scss"
 import "../styles/loader.scss"
+
 import "react-toastify/dist/ReactToastify.min.css"
 import {ToastContainer} from "react-toastify"
-import mongoose from "mongoose"
 
 
-
-import ScaleLoader from "react-spinners/ScaleLoader";
-import { css } from "@emotion/react";
 import React, {useState, useEffect} from "react"
-import {AuthContext} from "../context/AuthContext"
 import {useAuth} from "../hooks/auth.hook"
-import connectDB from "../middleware/mongodb"
 
-
-const override = css`
-  display: block;
-  margin: 0 auto;
-`;
 
 
 
@@ -34,16 +24,6 @@ function MyApp({ Component, pageProps }) {
     useEffect(()=>{
         setLoading(false)
 
-        setInterval(()=>{
-            if(!!token){
-                console.log("Check")
-                try {
-                    const verify=jwt.verify(token, 'Umidjon2231')
-                }catch (e) {
-                    logout()
-                }
-            }
-        }, 5000)
 
     }, [])
 
