@@ -1,0 +1,37 @@
+{
+  "short_name": "Tools of Umid",
+  "name": "Create by Umidjon",
+  "icons": [
+    {
+      "src": "icons/main-logo-ico.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "icons/main-logo-png.png",
+      "type": "image/png",
+      "sizes": "654x628"
+    },
+    {
+      "src": "icons/brands-logo-4.png",
+      "type": "image/png",
+      "sizes": "654x628"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#343A40",
+  "background_color": "#f1f1f1",
+  "permissions": [
+    "tabs",
+    "bookmarks",
+    "unlimitedStorage"
+  ],
+  "optional_permissions": [
+    "unlimitedStorage"
+  ],
+  "host_permissions": [
+    "http://www.blogger.com/",
+    "http://*.google.com/"
+  ]
+}
