@@ -12,17 +12,20 @@ body{
     height: 75vh;
     overflow-y: auto;
     overflow-x: hidden;
+    .row{
+      align-items: flex-start;
+    }
     .custom-card{
-      height: 100%;
+
       width: 100%;
-      border-width: 1px;
+      border-width: 2px;
       border-style: solid;
       border-radius: 10px;
       border-color: var(--primary);
       padding: 10px 20px 10px 20px;
       cursor: pointer;
+      transition: all linear 0.5s;
       .body{
-        height: 90%;
         display: flex;
         align-items: center;
       }

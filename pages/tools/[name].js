@@ -15,7 +15,7 @@ const Name = () => {
     })
     if(token!==null){
         switch (router.query.name) {
-            case "vijener": {
+            case "decoder": {
                 return <Decoder/>
             }
             case "link-save": {

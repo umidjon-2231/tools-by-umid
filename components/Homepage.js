@@ -42,6 +42,7 @@ const Homepage = () => {
         },
 
 
+
     ]
 
     return (
@@ -52,8 +53,8 @@ const Homepage = () => {
                 <div className="row">
                     {content.map((i, n)=>{
                         return(
-                            <Link href={'/tools'+i.url} key={n}>
-                                <div className="col-6 col-sm-4 col-lg-3 my-3">
+                            <div key={n} className="col-6 col-sm-4 col-lg-3 my-3">
+                                <Link href={'/tools'+i.url} >
                                     <div className="custom-card">
                                         <div className="header text-center">
                                             <b>{i.name}</b>
@@ -62,8 +63,9 @@ const Homepage = () => {
                                             <img src={`/images/${i.src}`} alt=""/>
                                         </div>
                                     </div>
-                                </div>
-                            </Link>
+                                </Link>
+                            </div>
+
                         )
                     })}
                 </div>

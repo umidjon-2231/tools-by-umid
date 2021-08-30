@@ -50,7 +50,14 @@ export default function Auth() {
                     <div className="card">
                         <AvForm onValidSubmit={loginHandler}>
                             <div className="card-body">
-                                <AvInput type="password" name="password" placeholder="Password"/>
+                                <AvInput
+                                    type="password"
+                                    name="password"
+                                    placeholder="Password"
+                                    validate={{
+                                        required: {value: true, errorMessage: 'Please enter password'}
+                                    }}
+                                />
                             </div>
                             <div className="card-footer py-1">
                                 <button disabled={loading}
