@@ -10,6 +10,8 @@ import {ScaleLoader} from 'react-spinners'
 
 import React, {useState, useEffect} from "react"
 import {useAuth} from "../hooks/auth.hook"
+import Loader from "../components/Loader"
+import axios from "axios"
 
 
 
@@ -19,17 +21,25 @@ import {useAuth} from "../hooks/auth.hook"
 function MyApp({ Component, pageProps }) {
     const {token, login, userId, logout, ready}=useAuth()
     const jwt=require('jsonwebtoken')
+    const [loading, setLoading]=useState(true)
 
 
     useEffect(()=>{
+        setLoading(true)
+        window.addEventListener('offline', ()=>{setLoading(true)})
+        window.addEventListener('online', ()=>{setLoading(false)})
+        setLoading(false)
 
     }, [Component])
 
-
+    if(loading){
+        return <Loader/>
+    }
 
 
   return (
       <>
+
 
 
           <Component  {...pageProps} />

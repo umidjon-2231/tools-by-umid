@@ -1,9 +1,12 @@
 import React from 'react';
+import {ScaleLoader} from 'react-spinners'
+import {useThemeDetector} from "../toolsOfProject"
 
 const Loader = () => {
+    const {isDarkTheme}=useThemeDetector()
     return (
-        <div className="d-flex align-items-center justify-content-center">
-            <h1>Loading...</h1>
+        <div className='loader'>
+            <ScaleLoader loading={true} color={isDarkTheme?'#f1f1f1':'#343A40'} />
         </div>
     );
 };

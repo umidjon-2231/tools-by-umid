@@ -2,10 +2,23 @@
   position: fixed;
   width: 100vw;
   height: 100vh;
-  z-index: 9999999;
+  z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f1f1f1;
+
+
+
+  @media (prefers-color-scheme: dark) {
+   background-color: var(--dark);
+  }
+  @media (prefers-color-scheme: light) {
+    background-color: #f1f1f1;
+  }
 
 }
+
+
+
+
+

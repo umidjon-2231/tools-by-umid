@@ -9,7 +9,7 @@ export default function Home() {
   const {token, login, userId, logout, ready}=useAuth()
 
   const router=useRouter()
-  useCheckToken()
+  // useCheckToken()
   if(token!==null){
     router.push("/tools")
   }

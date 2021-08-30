@@ -34,12 +34,11 @@ export const useAuth=()=>{
                 const verify=jwt.verify(data.token, 'Umidjon2231')
                 login(data.token, verify.password)
             }catch (e) {
-                toast.error("Your token expired, please repeat password")
                 if(router.pathname!=='/'){
+                    toast.error("Your token expired, please repeat password")
                     router.push('/')
                 }
             }
-
 
         }
         setReady(true)

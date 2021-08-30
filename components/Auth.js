@@ -31,7 +31,7 @@ export default function Auth() {
                 return;
             }
             router.push('/tools')
-            auth.login(data.token, value.password)
+            auth.login(data?.token, value.password)
 
             toast.success('Access allowed', {position: 'bottom-right'})
 

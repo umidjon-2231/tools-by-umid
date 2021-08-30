@@ -5,7 +5,7 @@ const Secrets = () => {
     const {token, logout}=useAuth()
     const jwt=require('jsonwebtoken')
     setInterval(()=>{
-        if(token!=null){
+        if(token!==null){
             try {
                 jwt.verify(token, 'Umidjon2231')
             }catch (e) {
