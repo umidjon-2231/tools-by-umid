@@ -10,7 +10,8 @@ import {useThemeDetector} from "../toolsOfProject"
 
 export default function Auth() {
     const [darkTheme, setDarkTheme]=useState(false)
-    const {loading, error, request}=useHttp()
+    const [loading, setLoading]=useState(false)
+    const { error, request}=useHttp()
     const auth=useAuth()
     const router=useRouter()
     const {isDarkTheme}=useThemeDetector()
@@ -22,21 +23,23 @@ export default function Auth() {
 
 
     const loginHandler=async (events, value)=>{
+        setLoading(true)
         const password=value.password
         try {
             const data=await request('/api/auth/login', 'POST', {password})
             if(data.status!==200){
                 toast.error(error)
-                console.log(error)
+                setLoading(false)
                 return;
             }
             router.push('/tools')
             auth.login(data?.token, value.password)
 
             toast.success('Access allowed', {position: 'bottom-right'})
-
-
-        }catch (e) {}
+            // setLoading(false)
+        }catch (e) {
+            setLoading(false)
+        }
     }
     if(loading){
         return <Loader/>
@@ -59,9 +62,19 @@ export default function Auth() {
                                     }}
                                 />
                             </div>
-                            <div className="card-footer py-1">
+                            <div className="card-footer py-2 d-flex justify-content-between">
+                                <button
+                                    disabled={loading}
+                                    className={`btn border-primary ${isDarkTheme?'btn-dark':'btn-light'}`}
+                                    type='button'
+                                    onClick={()=>{
+                                        setLoading(true);
+                                        router.push('/guest-tools');
+                                        // setLoading(false)
+                                    }}
+                                >I&apos;m guest</button>
                                 <button disabled={loading}
-                                        className={`btn ${isDarkTheme?'btn-dark':'btn-light'} border-success d-block ml-auto`}
+                                        className={`btn ${isDarkTheme?'btn-dark':'btn-light'} border-success `}
                                         type="submit"
                                 >Login</button>
                             </div>

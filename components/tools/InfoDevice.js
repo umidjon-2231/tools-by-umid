@@ -2,7 +2,7 @@ import React from 'react';
 import {NextSeo} from "next-seo"
 import {useRouter} from "next/router"
 
-const Decoder = () => {
+const InfoDevice = () => {
     const router=useRouter()
     return (
         <div>
@@ -12,13 +12,11 @@ const Decoder = () => {
                 }`}
             />
             <div className="container">
-
-                <h1 className="mt-5 text-center">Decoder</h1>
+                <h1 className="mt-5 text-center">Info of device</h1>
                 <div className=" col-10 mx-auto my-4 bg-info" style={{height: "2px"}}/>
             </div>
         </div>
-
     );
 };
 
-export default Decoder;
+export default InfoDevice;

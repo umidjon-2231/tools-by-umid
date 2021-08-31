@@ -3,8 +3,31 @@ import {useAuth} from "../hooks/auth.hook"
 import { useThemeDetector} from "../toolsOfProject"
 import Link from "next/link"
 import Loader from "./Loader"
+import {NextSeo} from "next-seo"
 
 const Homepage = (props) => {
+    const [content, setContent]=useState([
+        {
+            name: 'Decoder',
+            url: '/decoder',
+            src: 'decode-icon.png'
+        },
+        {
+            name: 'Link save',
+            url: '/link-save',
+            src: 'link-blue-icon.png'
+        },
+        {
+            name: 'Secrets',
+            url: '/secrets',
+            src: 'top-secret-stamp.png'
+        },
+        {
+            name: 'Info of device',
+            url: '/info-device',
+            src: 'info-icon.png'
+        }
+    ])
     const {token, logout}=useAuth()
     const jwt=require('jsonwebtoken')
     const {isDarkTheme}=useThemeDetector()
@@ -24,31 +47,19 @@ const Homepage = (props) => {
 
     useEffect(()=>{
 
+        setContent(content.sort((a, b)=>
+           a.name.localeCompare(b.name)
+        ))
 
     }, [])
-    const content=[
-        {
-            name: 'Decoder',
-            url: '/decoder',
-            src: 'decode-icon.png'
-        },
-        {
-            name: 'Link save',
-            url: '/link-save',
-            src: 'link-blue-icon.png'
-        },
-        {
-            name: 'Secrets',
-            url: '/secrets',
-            src: 'top-secret-stamp.png'
-        },
 
-
-
-    ]
 
     return (
         <div>
+            <NextSeo
+             title="Tools of Umid | Homepage"
+            />
+
 
             <div className="container homepage">
                 <h1 className="mt-5 text-center">Tools of Umid</h1>
@@ -69,7 +80,6 @@ const Homepage = (props) => {
                                         </div>
                                     </Link>
                                 </div>
-
                             )
                         })}
                     </div>

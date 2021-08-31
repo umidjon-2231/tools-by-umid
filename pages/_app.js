@@ -25,12 +25,11 @@ function MyApp({ Component, pageProps }) {
 
 
     useEffect(()=>{
-        setLoading(true)
         window.addEventListener('offline', ()=>{setLoading(true)})
         window.addEventListener('online', ()=>{setLoading(false)})
         setLoading(false)
 
-    }, [Component])
+    }, [])
 
     if(loading){
         return <Loader/>
@@ -39,12 +38,8 @@ function MyApp({ Component, pageProps }) {
 
   return (
       <>
-
-
-
           <Component  {...pageProps} />
           <ToastContainer/>
-
       </>
       )
 }

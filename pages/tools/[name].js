@@ -6,6 +6,7 @@ import Decoder from "../../components/tools/Decoder"
 import LinkSave from "../../components/tools/LinkSave"
 import Custom404 from "../404"
 import Secrets from "../../components/tools/Secrets"
+import InfoDevice from "../../components/tools/InfoDevice"
 
 const Name = () => {
     const router=useRouter()
@@ -23,6 +24,9 @@ const Name = () => {
             }
             case "secrets": {
                 return <Secrets/>
+            }
+            case "info-device":{
+                return <InfoDevice/>
             }
             default: {
                 return <Custom404/>
