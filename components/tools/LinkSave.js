@@ -8,15 +8,7 @@ const LinkSave = () => {
     const {token, logout}=useAuth()
     const jwt=require('jsonwebtoken')
     const router=useRouter()
-    setInterval(()=>{
-        if(token!=null){
-            try {
-                const verify=jwt.verify(token, 'Umidjon2231')
-            }catch (e) {
-                logout()
-            }
-        }
-    }, 900000)
+
     return (
         <div>
             <NextSeo

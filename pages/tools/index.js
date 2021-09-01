@@ -1,7 +1,6 @@
 import React from 'react';
 import Homepage from "../../components/Homepage"
 import {useAuth} from "../../hooks/auth.hook"
-import {useCheckToken} from "../../hooks/checkToken"
 import {useEffect} from 'react'
 import Custom404 from "../404"
 import {useRouter} from "next/router"

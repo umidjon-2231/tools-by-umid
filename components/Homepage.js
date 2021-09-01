@@ -5,7 +5,7 @@ import Link from "next/link"
 import Loader from "./Loader"
 import {NextSeo} from "next-seo"
 
-const Homepage = (props) => {
+const Homepage = () => {
     const [content, setContent]=useState([
         {
             name: 'Decoder',
@@ -34,24 +34,18 @@ const Homepage = (props) => {
 
 
 
-
-    setInterval(()=>{
-        if(token!=null ){
-            try {
-                jwt.verify(token, 'Umidjon2231')
-            }catch (e) {
-                logout()
-            }
-        }
-    }, 900000)
-
     useEffect(()=>{
 
         setContent(content.sort((a, b)=>
            a.name.localeCompare(b.name)
         ))
 
+
+
     }, [])
+
+
+
 
 
     return (
@@ -59,8 +53,6 @@ const Homepage = (props) => {
             <NextSeo
              title="Tools of Umid | Homepage"
             />
-
-
             <div className="container homepage">
                 <h1 className="mt-5 text-center">Tools of Umid</h1>
                 <div className=" col-10 mx-auto my-4 bg-info" style={{height: "2px"}}/>
@@ -71,7 +63,7 @@ const Homepage = (props) => {
                                 <div key={n} className="col-6 col-sm-4 col-lg-3 my-3">
                                     <Link href={'/tools'+i.url} >
                                         <div className="custom-card">
-                                            <div className="header text-center">
+                                            <div className="text-center">
                                                 <b>{i.name}</b>
                                             </div>
                                             <div className="body">

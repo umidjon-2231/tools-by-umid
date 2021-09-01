@@ -1,6 +1,5 @@
 import {useState, useCallback, useEffect} from 'react'
 import {useRouter} from "next/router"
-import {useCheckToken} from "./checkToken"
 import {toast} from "react-toastify"
 const jwt=require('jsonwebtoken')
 
@@ -34,12 +33,11 @@ export const useAuth=()=>{
                 const verify=jwt.verify(data.token, 'Umidjon2231')
                 login(data.token, verify.password)
             }catch (e) {
-                if(router.pathname!=='/'){
+                if(router.pathname!=='/' && e.name==='TokenExpiredError' && router.pathname!=='/guest-tools/[name]'){
                     toast.error("Your token expired, please repeat password")
                     router.push('/')
                 }
             }
-
         }
         setReady(true)
 

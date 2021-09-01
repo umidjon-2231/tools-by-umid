@@ -4,6 +4,8 @@ body{
 
 }
 
+
+
 .homepage{
   height: 100vh;
   overflow-y: hidden;
@@ -12,9 +14,7 @@ body{
     height: 75vh;
     overflow-y: auto;
     overflow-x: hidden;
-    .row{
-      align-items: flex-start;
-    }
+
     .custom-card{
 
       width: 100%;
@@ -35,6 +35,10 @@ body{
     }
   }
 }
+.row{
+  align-items: flex-start;
+}
+
 
 
 @import "theme";

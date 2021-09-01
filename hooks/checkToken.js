@@ -16,14 +16,12 @@ export const useCheckToken= ()=>{
         try {
             if(router.pathname!=='/'){
                 logout()
-                toast.error("Your token expired, please repeat password")
+                toast.error("Your token expired, please repeat password 1")
             }
 
         }catch (e) {
             console.log(e.message)
         }
-
-
     }
 
 }
