@@ -15,7 +15,7 @@ export const useHttp=()=>{
             }
             const response=await fetch(url, {method, body, headers})
             const data=await response.json()
-            if(data.status!==200){
+            if(data.status!==200 && data.status!==201){
                 toast.error(data.message)
             }
             if(!response.ok){
