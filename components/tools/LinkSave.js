@@ -141,10 +141,11 @@ const LinkSave = () => {
                             value={editItem._id?editItem?.category:'1'}
                         >
                             <option value="useful">Useful</option>
+                            <option value="interesting">Interesting</option>
                             <option value="programming">Programming</option>
                             <option value="information">Information</option>
                             <option value="important">Important</option>
-                            <option value="website-of-umid">Website of Umid</option>
+                            <option value="my-websites">My websites</option>
                             <option value="other">Other</option>
                         </AvField>
                     </ModalBody>
