@@ -15,37 +15,81 @@ body{
     overflow-y: auto;
     overflow-x: hidden;
 
-    .custom-card{
-      width: 100%;
-      border-width: 2px;
-      border-style: solid;
-      border-radius: 10px;
-      border-color: var(--primary);
-      padding: 10px 20px 10px 20px;
-      cursor: pointer;
-      transition: all linear 0.5s;
-      p{
-        white-space: nowrap;
-        overflow: hidden;
-        width: 100%;
-        text-overflow: ellipsis;
-        direction: rtl;
-      }
 
-
-      .body{
-        display: flex;
-        align-items: center;
-      }
-      img{
-        width: 100%;
-      }
-    }
   }
 }
 .row{
   align-items: flex-start;
 }
+.dropdown{
+  .btn{
+    &:focus{
+      box-shadow: none;
+    }
+  }
+
+  button{
+    &:nth-child(1){
+      padding-right: 0;
+      padding-left: 0;
+    }
+  }
+  .dropdown-menu{
+    padding: 5px 10px 5px 10px ;
+    min-width: 8rem;
+  }
+  .dropdown-menu.show{
+    transform: translate3d(200px, 33px, 0)!important;
+  }
+
+  img{
+    width: 20px;
+  }
+  .dropdown-item.active{
+    all: initial;
+  }
+
+  .dropdown-item:focus{
+    all: unset;
+  }
+  .dropdown-item{
+    padding: 4px 0 4px 0;
+
+    &:hover{
+      all: unset;
+      padding: 4px 0 4px 0;
+
+    }
+  }
+}
+.custom-card{
+  width: 100%;
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 10px;
+  border-color: var(--primary);
+  padding: 10px 20px 10px 20px;
+  cursor: pointer;
+  transition: all linear 0.5s;
+  p{
+    white-space: nowrap;
+    overflow: hidden;
+    width: 100%;
+    text-overflow: ellipsis;
+    direction: rtl;
+  }
+
+
+  .body{
+    display: flex;
+    align-items: center;
+    img{
+      width: 100%;
+    }
+  }
+
+}
+
 
 
 

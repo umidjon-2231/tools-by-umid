@@ -24,13 +24,19 @@ body{
     //  background-color: #131920;
     //}
     .custom-card{
-      &:hover{
-        background-color: #e2e2e2;
-        box-shadow: 5px 5px 10px #000;
+      .hover{
+        &:hover{
+          background-color: #e2e2e2;
+          box-shadow: 5px 5px 10px #000;
+        }
+        &:focus{
+          background-color: #e2e2e2;
+        }
       }
-      &:focus{
-        background-color: #e2e2e2;
-      }
+
+    }
+    .dropdown-item:hover{
+      text-shadow: 2px 2px 3px var(--dark)!important;
     }
   }
 
@@ -84,14 +90,19 @@ body{
     .modal-content{
       background-color: var(--dark);
     }
-    .custom-card{
-      &:hover{
-        background-color: #23272b;
-        box-shadow: 5px 5px 10px #000;
-      }
+    .custom-card.hover{
+        &:hover{
+          background-color: #23272b;
+          box-shadow: 5px 5px 10px #000;
+        }
+    }
+    .custom-card.focus{
       &:focus{
         background-color: #23272b;
       }
+    }
+    .dropdown-item:hover{
+      text-shadow: 2px 2px 3px #f1f1f1!important;
     }
 
   }

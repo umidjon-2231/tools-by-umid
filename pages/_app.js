@@ -30,7 +30,7 @@ function MyApp({ Component, pageProps }) {
         setLoading(false)
     }, [])
     setInterval(()=>{
-        if(token!==null && router.pathname!=='/guest-tools/[name]' && router.pathname!=='/'){
+        if(token!==null && router.pathname!=='/guest-tools/[name]'&& router.pathname!=='/guest-tools' && router.pathname!=='/'){
             try {
                 jwt.verify(token, 'Umidjon2231')
             }catch (e) {
