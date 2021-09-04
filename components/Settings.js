@@ -5,7 +5,7 @@ import {NextSeo} from "next-seo"
 import {useRouter} from "next/router"
 
 const Settings = () => {
-    const {token}=useAuth()
+    const {token, logout}=useAuth()
     const router=useRouter()
 
     if(!!token){
@@ -19,7 +19,7 @@ const Settings = () => {
                 <div className="container ">
                     <h1 className="mt-5 text-center">Settings</h1>
                     <div className=" col-10 mx-auto my-4 bg-info" style={{height: "2px"}}/>
-
+                    <button className='btn btn-primary' onClick={logout}>Logout</button>
                 </div>
 
             </div>
