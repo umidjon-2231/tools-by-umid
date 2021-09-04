@@ -4,7 +4,7 @@ import "../styles/main.scss"
 import "../styles/loader.scss"
 
 import "react-toastify/dist/ReactToastify.min.css"
-import {ToastContainer} from "react-toastify"
+import {toast, ToastContainer} from "react-toastify"
 
 
 import React, {useState, useEffect} from "react"
@@ -18,7 +18,7 @@ import {useRouter} from "next/router"
 
 
 function MyApp({ Component, pageProps }) {
-    const {token, login, userId, logout, ready}=useAuth()
+    const {token, logout}=useAuth()
     const jwt=require('jsonwebtoken')
     const [loading, setLoading]=useState(true)
     const router=useRouter()
@@ -28,12 +28,14 @@ function MyApp({ Component, pageProps }) {
         window.addEventListener('offline', ()=>{setLoading(true)})
         window.addEventListener('online', ()=>{setLoading(false)})
         setLoading(false)
+        {/*    todo: security update*/}
     }, [])
     setInterval(()=>{
-        if(token!==null && router.pathname!=='/guest-tools/[name]'&& router.pathname!=='/guest-tools' && router.pathname!=='/'){
+        if(token!==null && router.pathname!=='/guest-tools/[name]' && router.pathname!=='/guest-tools' && router.pathname!=='/'){
             try {
                 jwt.verify(token, 'Umidjon2231')
             }catch (e) {
+                toast.error('Your token expired please repeat password')
                 logout()
             }
         }

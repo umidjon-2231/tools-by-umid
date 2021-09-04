@@ -18,18 +18,26 @@ import Loader from "../Loader"
 
 const LinkSave = () => {
     const [modal, setModal]=useState(false)
+    const [filterModal, setFilterModal]=useState(false)
+    const [viewModal, setViewModal]=useState(false)
+    const [viewLink, setViewLink]=useState({})
     const [deleteModal, setDeleteModal]=useState(false)
     const [loading, setLoading]=useState(false)
     const [links, setLinks]=useState([])
+    const [content, setContent]=useState([])
     const [editItem, setEditItem]=useState({})
     const [deleteItem, setDeleteItem]=useState('')
+    const [filterMode, setFilterMode]=useState({
+        category: 'none',
+        firstNew: true,
+    })
 
     const {isDarkTheme, nameTheme}=useThemeDetector()
     const router=useRouter()
     const {request}=useHttp()
 
     useEffect(()=>{
-        getLinks()
+       getLinks()
     }, [])
 
     const toggle=()=>{
@@ -37,6 +45,10 @@ const LinkSave = () => {
             setEditItem({})
         }
         setModal(!modal)
+
+    }
+    const toggleFilter=()=>{
+        setFilterModal(!filterModal)
     }
     const toggleDelete=()=>{
         if(deleteModal){
@@ -44,11 +56,16 @@ const LinkSave = () => {
         }
         setDeleteModal(!deleteModal)
     }
+    const toggleView=()=>{
+        setViewModal(!viewModal)
+    }
 
     const getLinks=async ()=>{
         setLoading(true)
         const res=await request('/api/link/get-link', 'GET')
-        setLinks(res.data)
+        await setContent(res.data)
+        await filterChange('', filterMode, res.data)
+
         setLoading(false)
     }
 
@@ -58,12 +75,13 @@ const LinkSave = () => {
             values.link="https://"+values.link
         }
         if(editItem._id){
-            const res=request('/api/link/edit-link','POST', {...values, _id: editItem._id})
+            const res=request('/api/link/edit-link','POST', {...values, _id: editItem._id, date: editItem.date})
             if(res.status===200){
                 toast.success('Link edited')
             }else{
                 toast.error(res.message)
                 toggle()
+                setLoading(false)
             }
 
         }else{
@@ -73,11 +91,12 @@ const LinkSave = () => {
             }else{
                 toast.error(res.message)
                 toggle()
+                setLoading(false)
             }
         }
 
-        getLinks()
         toggle()
+        await getLinks()
     }
 
     const deleteLink=async ()=>{
@@ -90,6 +109,36 @@ const LinkSave = () => {
         }
         getLinks()
         toggleDelete()
+    }
+
+    const filterChange=(e, value, data=null)=>{
+        if(!data){
+            data=content
+        }
+        let result=[]
+        setFilterMode(value)
+        if(value.category==='none'){
+            result=data
+        }else{
+            result=filterCategory(value.category, data)
+        }
+        if(value.firstNew){
+            result=result.sort((a,b)=>{return b.date-a.date})
+        }else{
+            result=result.sort((a,b)=>{return a.date-b.date})
+        }
+        setLinks(result)
+        setFilterModal(false)
+    }
+
+    const filterCategory=(name, data)=>{
+        let result=[]
+        data.map((i,n)=>{
+            if(i.category===name){
+                result.push(i)
+            }
+        })
+        return  result
     }
 
 
@@ -153,12 +202,12 @@ const LinkSave = () => {
                         <button
                             type='button'
                             onClick={toggle}
-                            className={`btn border-secondary ${isDarkTheme?'btn-dark':'btn-light'}`}
+                            className={`btn ${isDarkTheme?'btn-dark border-secondary':'btn-secondary'}`}
                         >Cancel</button>
                         <button
                             type="submit"
                             disabled={loading}
-                            className={`btn border-success ${isDarkTheme?'btn-dark':'btn-light'}`}
+                            className={`btn ${isDarkTheme?'btn-dark border-success':'btn-success'}`}
                         >{editItem._id?'Edit':'Add'}</button>
                     </ModalFooter>
                 </AvForm>
@@ -169,14 +218,12 @@ const LinkSave = () => {
                     Delete link
                 </ModalHeader>
                 <ModalBody>
-                    Do you want to delete this link?
+                    Do you want to delete this link?(Click to card for view info of link)
                     <div className="col-12 content my-3">
-                        <div className="custom-card">
+                        <div className="custom-card" onClick={()=>{setViewLink(deleteItem);toggleView()}}>
                             {deleteItem._id?<div>
-                            <p><a href={deleteItem?.link} rel='noreferrer' target='_blank'>{deleteItem?.link}</a></p>
-                            <div className={`body ${isDarkTheme?'text-light':'text-dark'}`}>
-                                {deleteItem?.description}
-                            </div></div>:''}
+                            <a href={deleteItem?.link} rel='noreferrer' target='_blank'>{deleteItem?.link}</a>
+                            </div>:''}
                         </div>
                     </div>
                 </ModalBody>
@@ -186,26 +233,110 @@ const LinkSave = () => {
                 </ModalFooter>
             </Modal>
 
+            <Modal isOpen={viewModal} toggle={toggleView}>
+                <ModalHeader>Vew link</ModalHeader>
+                <ModalBody>
+                    <AvForm>
+                        <AvField label='Link:' type='text' name='link' value={viewLink?.link} disabled={true}/>
+                        <AvField label='Description:' rows={5} type='textarea' name='description' value={viewLink?.description} disabled={true}/>
+                        <AvField label='Category:' type='text' name='category' value={viewLink?.category} disabled={true}/>
+                    </AvForm>
+                </ModalBody>
+                <ModalFooter className='py-2'>
+                    <button
+                        type='button'
+                        className={`btn ${isDarkTheme?'btn-dark border-secondary':'btn-secondary'}`}
+                        onClick={toggleView}
+                    >Cancel</button>
+                    <a
+                        href={viewLink?.link}
+                        className={`btn ${isDarkTheme?'btn-dark border-primary':'btn-primary'}`}
+                        target='_blank' rel='noreferrer'
+                    >Open</a>
+                </ModalFooter>
+            </Modal>
+
+            <Modal isOpen={filterModal} toggle={toggleFilter}>
+                <ModalHeader>
+                    Filter
+                </ModalHeader>
+                <AvForm onValidSubmit={filterChange}>
+                    <ModalBody>
+                        <AvField type='select' name='category' value={filterMode.category}>
+                            <option value="none">None</option>
+                            <option value="useful">Useful</option>
+                            <option value="interesting">Interesting</option>
+                            <option value="programming">Programming</option>
+                            <option value="information">Information</option>
+                            <option value="important">Important</option>
+                            <option value="my-websites">My websites</option>
+                            <option value="other">Other</option>
+                        </AvField>
+                        <AvField label='First new' type='checkbox' name='firstNew' value={filterMode.firstNew}/>
+
+
+                    </ModalBody>
+                    <ModalFooter className='py-2'>
+                        <div className="d-flex w-100 justify-content-between">
+                            <button
+                                type='button'
+                                onClick={toggleFilter}
+                                className={`btn ${isDarkTheme?'btn-dark border-secondary':'btn-secondary'}`}>Cancel</button>
+                            <div className="">
+                                <button
+                                    type='submit'
+                                    className={`btn ${isDarkTheme?'btn-dark border-success':'btn-success'}`}
+                                >Apply</button>
+                            </div>
+
+                        </div>
+                    </ModalFooter>
+                </AvForm>
+
+            </Modal>
+
             <div className="container homepage">
                 <h1 className="mt-5 text-center">Link save</h1>
                 <div className=" col-10 mx-auto my-4 bg-info" style={{height: "2px"}}/>
-                <div className="mx-2">
-                {/*    todo:filter mode    */}
-                    <button
-                        className={`btn border-success d-block ml-auto ${isDarkTheme?'btn-dark':'btn-light'}`}
-                        type='button'
-                        onClick={toggle}
+                <div className="row align-items-center" style={{paddingLeft: 10, paddingRight: 10}}>
+                    <div className="col-6">
+                        <button
+                            type={'button'}
+                            onClick={toggleFilter}
+                            className={`btn border-primary ${isDarkTheme?'btn-dark':'btn-light'}`}>
+                            <img src="/icons/filter-icon.png" style={{marginRight: 5}} alt="" width={20}/>
+                            Filter
+                        </button>
+                    </div>
+                    <div className="col-6">
+                        <button
+                            className={`btn d-block ml-auto ${isDarkTheme?'btn-dark border-success':'btn-success'}`}
+                            type='button'
+                            onClick={toggle}
 
-                    >Add link</button>
+                        >Add link</button>
+                    </div>
+
+
                 </div>
                 <div className="content mt-3">
                     <div className="row">
+
                         {links.length!==0?links.map((i,n)=>{
+                            const domainName=(url)=>{
+                                url=url.replace('http://', '')
+                                url=url.replace('https://', '')
+                                let end=url.indexOf('/')
+                                return url.slice(0, end)
+                            }
+
                             return(
                                 <div key={i._id} className="col-lg-4 col col-sm-3 my-2">
-                                        <div className="custom-card hover">
+                                        <div className="custom-card hover" onClick={()=>{setViewLink(i);toggleView()}}>
                                             <UncontrolledDropdown size='sm'>
-                                                <DropdownToggle color='transparent' className={`ml-auto d-block`}>
+                                                <DropdownToggle color='transparent'
+                                                                onClick={(event)=>{event.stopPropagation()}}
+                                                                className={`ml-auto d-block`}>
                                                     <img
                                                         src={`/icons/three-points-icon-${nameTheme}.png`}
                                                         alt=""/>
@@ -216,21 +347,37 @@ const LinkSave = () => {
 
                                                     <DropdownItem
                                                         size='sm'
-                                                        className={`${isDarkTheme?'text-light':'text-dark'}`}
-                                                        onClick={()=>{setEditItem(i);toggle()}}
+                                                        className={`text-primary w-100`}
+                                                        onClick={(event)=>{
+                                                            setEditItem(i);
+                                                            toggle();
+                                                            event.stopPropagation()}}
                                                     >Edit</DropdownItem>
                                                     <DropdownItem
                                                         size='sm'
-                                                        className={`${isDarkTheme?'text-light':'text-dark'}`}
-                                                        onClick={()=>{ setDeleteItem(i);toggleDelete()}}
+                                                        className={`text-info w-100`}
+                                                        onClick={(event)=>{
+                                                            setViewLink(i);
+                                                            toggleView();
+                                                            event.stopPropagation()}}
+                                                    >View</DropdownItem>
+                                                    <DropdownItem
+                                                        size='sm'
+                                                        className={`text-danger w-100`}
+                                                        onClick={(event)=>{
+                                                            setDeleteItem(i);
+                                                            toggleDelete();
+                                                            event.stopPropagation()}}
                                                     >Delete</DropdownItem>
                                                 </DropdownMenu>
                                             </UncontrolledDropdown>
-                                            <p><a href={i.link} rel='noreferrer' target='_blank'>{i.link}</a></p>
+                                            <p><a href={i.link}
+                                                  onClick={(event)=>{event.stopPropagation()}}
+                                                  rel='noreferrer' target='_blank'>{domainName(i.link)}</a></p>
 
-                                            <div className={`body ${isDarkTheme?'text-light':'text-dark'}`}>
-                                                {i.description}
 
+                                            <div className={`body-link ${isDarkTheme?'text-light':'text-dark'}`}>
+                                                <h5>{i.description}</h5>
                                             </div>
                                         </div>
 
@@ -245,7 +392,6 @@ const LinkSave = () => {
                             }
                     </div>
                 </div>
-
 
             </div>
         </div>

@@ -7,6 +7,7 @@ import LinkSave from "../../components/tools/LinkSave"
 import Custom404 from "../404"
 import Secrets from "../../components/tools/Secrets"
 import InfoDevice from "../../components/tools/InfoDevice"
+import Settings from "../../components/Settings"
 
 const Name = () => {
     const router=useRouter()
@@ -27,6 +28,9 @@ const Name = () => {
             }
             case "info-device":{
                 return <InfoDevice/>
+            }
+            case "settings":{
+                return <Settings/>
             }
             default: {
                 return <Custom404/>

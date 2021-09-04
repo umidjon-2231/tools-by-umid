@@ -26,6 +26,11 @@ const Homepage = () => {
             name: 'Info of device',
             url: '/info-device',
             src: 'info-icon.png'
+        },
+        {
+            name: "Settings",
+            url: "/settings",
+            src: 'setting-icon.png'
         }
     ])
     const {token, logout}=useAuth()
@@ -62,7 +67,7 @@ const Homepage = () => {
                             return(
                                 <div key={n} className="col-6 col-sm-4 col-lg-3 my-3">
                                     <Link href={'/tools'+i.url} >
-                                        <div className="custom-card">
+                                        <div className="custom-card hover focus">
                                             <div className="text-center">
                                                 <b>{i.name}</b>
                                             </div>

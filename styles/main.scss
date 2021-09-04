@@ -83,8 +83,22 @@ body{
   .body{
     display: flex;
     align-items: center;
+
     img{
       width: 100%;
+    }
+  }
+  .body-link{
+    height: 50px;
+    width: 100%;
+    overflow: hidden;
+
+    h5{
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      font-weight: normal;
+      font-size: 1rem;
     }
   }
 

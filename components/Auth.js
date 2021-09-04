@@ -65,16 +65,15 @@ export default function Auth() {
                             <div className="card-footer py-2 d-flex justify-content-between">
                                 <button
                                     disabled={loading}
-                                    className={`btn border-primary ${isDarkTheme?'btn-dark':'btn-light'}`}
+                                    className={`btn ${isDarkTheme?'btn-dark border-primary':'btn-primary'}`}
                                     type='button'
                                     onClick={()=>{
                                         setLoading(true);
                                         router.push('/guest-tools');
-                                        // setLoading(false)
                                     }}
                                 >I&apos;m guest</button>
                                 <button disabled={loading}
-                                        className={`btn ${isDarkTheme?'btn-dark':'btn-light'} border-success `}
+                                        className={`btn ${isDarkTheme?'btn-dark border-success':'btn-success'} `}
                                         type="submit"
                                 >Login</button>
                             </div>

@@ -16,7 +16,6 @@ export const useAuth=()=>{
     const login=useCallback((jwtToken, password)=>{
         setToken(jwtToken)
         setPassword(password)
-
         localStorage.setItem(storageName, JSON.stringify({token: jwtToken}))
 
     }, [])
@@ -33,9 +32,11 @@ export const useAuth=()=>{
                 const verify=jwt.verify(data.token, 'Umidjon2231')
                 login(data.token, verify.password)
             }catch (e) {
-                if(router.pathname!=='/' && e.name==='TokenExpiredError' && router.pathname!=='/guest-tools/[name]'){
+                if(router.pathname!=='/' &&
+                    e.name==='TokenExpiredError' &&
+                    router.pathname!=='/guest-tools/[name]' && router.pathname!=='/guest-tools'){
                     toast.error("Your token expired, please repeat password")
-                    router.push('/')
+                    logout()
                 }
             }
         }
