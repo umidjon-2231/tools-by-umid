@@ -8,29 +8,29 @@ const storageName=process.env.storageName
 
 export const useAuth=()=>{
     const [token, setToken]=useState(null)
-    const [password, setPassword]=useState('')
     const [ready, setReady]=useState(false)
 
     const router=useRouter()
 
-    const login=useCallback((jwtToken, password)=>{
+    const login=useCallback((jwtToken)=>{
         setToken(jwtToken)
-        setPassword(password)
         localStorage.setItem(storageName, JSON.stringify({token: jwtToken}))
-
     }, [])
 
     const logout=useCallback(()=>{
         setToken(null)
         localStorage.removeItem(storageName)
         router.push('/')
+
+
     }, [])
     useEffect(()=>{
         const data=JSON.parse(localStorage.getItem(storageName))
+
         if(data && data.token){
+            login(data.token)
             try {
                 const verify=jwt.verify(data.token, 'Umidjon2231')
-                login(data.token, verify.password)
             }catch (e) {
                 if(router.pathname!=='/' &&
                     e.name==='TokenExpiredError' &&
@@ -45,5 +45,5 @@ export const useAuth=()=>{
     }, [login])
 
 
-    return {login, logout, token, ready, password}
+    return {login, logout, token, ready}
 }
