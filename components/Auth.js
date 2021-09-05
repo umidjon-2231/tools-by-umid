@@ -53,6 +53,7 @@ export default function Auth() {
                     <div className="card">
                         <AvForm onValidSubmit={loginHandler}>
                             <div className="card-body">
+                                <AvInput type='text' name='login' value='admin' className='d-none'/>
                                 <AvInput
                                     type="password"
                                     name="password"
