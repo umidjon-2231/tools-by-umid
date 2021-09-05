@@ -10,6 +10,9 @@ export const useThemeDetector = () => {
 
     useEffect(() => {
         setIsDarkTheme(getCurrentTheme())
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            setIsDarkTheme(e.matches)
+        });
     }, []);
 
     return {isDarkTheme, nameTheme: isDarkTheme?'dark':'light'};
