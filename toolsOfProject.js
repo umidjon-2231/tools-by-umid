@@ -9,8 +9,6 @@ export const useThemeDetector = () => {
 
 
     useEffect(() => {
-        let theme=getCurrentTheme()
-        toast.success(theme.toString())
         setIsDarkTheme(getCurrentTheme())
     }, []);
 
