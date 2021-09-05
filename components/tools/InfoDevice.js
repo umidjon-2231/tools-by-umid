@@ -9,7 +9,7 @@ import {useThemeDetector} from "../../toolsOfProject"
 const InfoDevice = () => {
     const [content, setContent]=useState([])
     const [loading, setLoading]=useState(true)
-    const {isDarkTheme}=useThemeDetector()
+    const {isDarkTheme, nameTheme}=useThemeDetector()
 
 
     const router=useRouter()
@@ -35,7 +35,7 @@ const InfoDevice = () => {
         infos.push({name: 'Available width', value: screen.availWidth})
         infos.push({name: 'Available height', value: screen.availHeight})
         infos.push({name: 'Color depth', value: screen.colorDepth})
-        infos.push({name: 'Pixel depth', value: screen.pixelDepth})
+        infos.push({name: 'Dark theme', value: nameTheme})
         infos.push({name: 'App name', value: navigator.appName})
         infos.push({name: 'App code name', value: navigator.appCodeName})
         infos.push({name: 'Platform', value: navigator.platform})
