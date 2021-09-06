@@ -19,7 +19,7 @@ const handler=async (req, res)=> {
                     password
                 },
                 secretKey,
-                {expiresIn: '5000'}
+                {expiresIn: '2h'}
             )
             res.json({token, status: 200})
         }catch (e) {
