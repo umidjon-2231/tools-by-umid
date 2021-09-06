@@ -163,6 +163,15 @@ const LinkSave = () => {
         return  result
     }
 
+    const searchResult=async (name)=>{
+        let filteredArray=[]
+        filteredArray=await content.filter(a=>{
+            return a.link.toUpperCase().includes(name.toUpperCase()) || a.description.toUpperCase().includes(name.toUpperCase())
+        })
+        setLinks(filteredArray)
+
+    }
+
 
 
 
@@ -321,23 +330,40 @@ const LinkSave = () => {
                 <h1 className="mt-5 text-center">Link save</h1>
                 <div className=" col-10 mx-auto my-4 bg-info" style={{height: "2px"}}/>
                 <div className="row align-items-center" style={{paddingLeft: 10, paddingRight: 10}}>
-                    <div className="col-6">
-                        <button
-                            type={'button'}
-                            onClick={toggleFilter}
-                            className={`btn border-primary ${isDarkTheme?'btn-dark':'btn-light'}`}>
-                            <img src="/icons/filter-icon.png" style={{marginRight: 5}} alt="" width={20}/>
-                            Filter
-                        </button>
-                    </div>
-                    <div className="col-6">
-                        <button
-                            className={`btn d-block ml-auto ${isDarkTheme?'btn-dark border-success':'btn-success'}`}
-                            type='button'
-                            onClick={toggle}
 
-                        >Add link</button>
+                    <div className="col-lg-8 col-sm-6 col-12">
+                        <div className="col-lg-6 col-12 input-group px-0">
+                            <input type="search" name="search"
+                                   className='form-control' autoComplete='off'
+                                   placeholder='Search'
+                                   id="search" onChange={(e)=>{searchResult(e.target.value)}}
+                            />
+                            <div className="input-group-append">
+                                <span className="input-group-text bg-transparent">
+                                    <img src="/icons/search-icon.png" alt="" width={20}/>
+                                </span>
+                            </div>
+                        </div>
                     </div>
+                    <div className="col-lg-4 col-sm-6 col-12 mt-3 mt-sm-0 d-flex justify-content-end">
+
+                            <button
+                                type={'button'}
+                                onClick={toggleFilter}
+                                className={`btn border-primary ${isDarkTheme?'btn-dark':'btn-light'}`}>
+                                <img src="/icons/filter-icon.png" style={{marginRight: 5}} alt="" width={20}/>
+                                Filter
+                            </button>
+
+                            <button
+                                className={`btn ml-3 ${isDarkTheme?'btn-dark border-success':'btn-success'}`}
+                                type='button'
+                                onClick={toggle}
+
+                            >Add link</button>
+
+                    </div>
+
 
 
                 </div>
@@ -356,7 +382,7 @@ const LinkSave = () => {
                             }
 
                             return(
-                                <div key={i._id} className="col-lg-4 col col-sm-3 my-2">
+                                <div key={i._id} className="col-lg-4 col col-sm-6 my-2">
                                         <div className="custom-card hover" onClick={()=>{setViewLink(i);toggleView()}}>
                                             <UncontrolledDropdown size='sm'>
                                                 <DropdownToggle color='transparent'
