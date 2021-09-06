@@ -1,11 +1,28 @@
 const Link=require('../../../models/link')
 import connectDB from "../../../middleware/mongodb"
+const jwt=require('jsonwebtoken')
 
 
 const deleteLink=async (req, res)=>{
     if(req.method==="POST"){
         try {
+            if(!req.headers.authorization){
+                throw new Error('Not authorization')
+            }
+
+            const token=req.headers.authorization.split(' ')[1];
             const {id} = req.body;
+
+            try{
+                await jwt.verify(token, process.env.jwtSecret)
+            }catch (e) {
+                return res.status(401).json({message: e.message, status: 401})
+            }
+
+
+
+
+
             const deletedLink = await Link.findOneAndDelete({
                 _id: id
             });
@@ -21,7 +38,6 @@ const deleteLink=async (req, res)=>{
             res.status(200).json({
                 message: 'Link deleted',
                 status: 200,
-                deletedLink
             });
 
         }catch (e) {

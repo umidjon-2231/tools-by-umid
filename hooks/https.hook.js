@@ -1,11 +1,16 @@
-import {useCallback, useState} from 'react'
+import React, {useCallback, useState} from 'react'
 import {toast} from "react-toastify"
+import {useAuth} from "./auth.hook"
+
 
 
 
 export const useHttp=()=>{
     const [loading, setLoading]=useState(false)
     const [error, setError]=useState(null)
+    const {logout}=useAuth()
+    const toastId = React.useRef(null);
+
     const request=useCallback(async (url, method='Get', body=null, headers={})=>{
         setLoading(true)
         try {
@@ -15,11 +20,22 @@ export const useHttp=()=>{
             }
             const response=await fetch(url, {method, body, headers})
             const data=await response.json()
-            if(data.status!==200 && data.status!==201){
-                toast.error(data.message)
+            if(data.status===401){
+                if(!toast.isActive(toastId.current)) {
+                    toastId.current = toast.error("Invalid token or token expired");
+                }
+                await logout()
+                await setLoading(false)
+                return {status: 401}
             }
-            if(!response.ok){
-                throw new Error(data.message || '')
+            if(data.status!==200 && data.status!==201){
+                if(!toast.isActive(toastId.current)) {
+                    toastId.current = toast.error(data.message);
+                }
+            }
+
+            if(!response){
+                throw new Error(data.message || 'Error')
             }
             setLoading(false)
 

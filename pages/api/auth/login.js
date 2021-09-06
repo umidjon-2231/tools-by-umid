@@ -9,7 +9,7 @@ const handler=async (req, res)=> {
             const {password}=req.body
             const user=await User.findOne({password})
             if(!user){
-                return res.status(400).json({message: "Error password", status: 400})
+                return res.status(401).json({message: "Error password", status: 400})
             }
 
             const secretKey=process.env.jwtSecret
@@ -19,7 +19,7 @@ const handler=async (req, res)=> {
                     password
                 },
                 secretKey,
-                {expiresIn: '2h'}
+                {expiresIn: '5000'}
             )
             res.json({token, status: 200})
         }catch (e) {

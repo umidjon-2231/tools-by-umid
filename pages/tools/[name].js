@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
 import {useAuth} from "../../hooks/auth.hook"
-import Auth from "../../components/Auth"
 import {useRouter} from "next/router"
 import Decoder from "../../components/tools/Decoder"
 import LinkSave from "../../components/tools/LinkSave"
@@ -14,7 +13,7 @@ const Name = () => {
     const {token}=useAuth()
     useEffect(()=>{
 
-    })
+    }, [])
     if(token!==null){
         switch (router.query.name) {
             case "decoder": {
@@ -32,6 +31,7 @@ const Name = () => {
             case "settings":{
                 return <Settings/>
             }
+
             default: {
                 return <Custom404/>
             }

@@ -15,6 +15,7 @@ import {
 import {useHttp} from "../../hooks/https.hook"
 import {toast} from "react-toastify"
 import Loader from "../Loader"
+import {useAuth} from "../../hooks/auth.hook"
 
 const LinkSave = () => {
     const [modal, setModal]=useState(false)
@@ -35,6 +36,7 @@ const LinkSave = () => {
     const {isDarkTheme, nameTheme}=useThemeDetector()
     const router=useRouter()
     const {request}=useHttp()
+    const {token}=useAuth()
 
     useEffect(()=>{
        getLinks()
@@ -62,9 +64,21 @@ const LinkSave = () => {
 
     const getLinks=async ()=>{
         setLoading(true)
-        const res=await request('/api/link/get-link', 'GET')
-        await setContent(res.data)
-        await filterChange('', filterMode, res.data)
+
+        const tokenGet=await JSON.parse(localStorage.getItem(process.env.storageName))
+        const res=await request('/api/link/get-link', 'GET', null,
+            {
+                Authorization: `Bearer ${tokenGet?.token}`
+            })
+        if(res.data){
+            await setContent(res.data)
+            await filterChange('', filterMode, res.data)
+        }
+        if(res.status===400){
+
+        }
+
+
 
         setLoading(false)
     }
@@ -75,33 +89,41 @@ const LinkSave = () => {
             values.link="https://"+values.link
         }
         if(editItem._id){
-            const res=request('/api/link/edit-link','POST', {...values, _id: editItem._id, date: editItem.date})
+            const res=request('/api/link/edit-link','POST',
+                {...values, _id: editItem._id, date: editItem.date },
+                {
+                    Authorization: `Bearer ${token}`
+                })
             if(res.status===200){
                 toast.success('Link edited')
             }else{
-                toast.error(res.message)
-                toggle()
+                setModal(false)
                 setLoading(false)
             }
 
         }else{
-            const res=await request('/api/link/save-link', 'POST', {...values, date: Date.now()})
+            const res=await request('/api/link/save-link', 'POST', {...values, date: Date.now()},
+                {
+                    Authorization: `Bearer ${token}`
+                })
             if(res.status===201){
                 toast.success(res.message)
             }else{
-                toast.error(res.message)
-                toggle()
+                setModal(false)
                 setLoading(false)
             }
         }
 
-        toggle()
+        setModal(false)
         await getLinks()
     }
 
     const deleteLink=async ()=>{
         setLoading(true)
-        const res=await request('/api/link/delete-link', 'POST', {id: deleteItem._id})
+        const res=await request('/api/link/delete-link', 'POST', {id: deleteItem._id},
+            {
+                Authorization: `Bearer ${token}`
+            })
         if(res.status===200){
             toast.success('Link deleted')
         }else{
@@ -327,6 +349,9 @@ const LinkSave = () => {
                                 url=url.replace('http://', '')
                                 url=url.replace('https://', '')
                                 let end=url.indexOf('/')
+                                if(end<0){
+                                    end=url.length
+                                }
                                 return url.slice(0, end)
                             }
 

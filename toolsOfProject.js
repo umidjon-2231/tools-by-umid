@@ -8,11 +8,10 @@ export const useThemeDetector = () => {
     const [isDarkTheme, setIsDarkTheme] = useState(false);
 
 
-    useEffect(() => {
-        setIsDarkTheme(getCurrentTheme())
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-            setIsDarkTheme(e.matches)
-        });
+    useEffect(async () => {
+        let theme=await getCurrentTheme()
+        await setIsDarkTheme(theme)
+
     }, []);
 
     return {isDarkTheme, nameTheme: isDarkTheme?'dark':'light'};

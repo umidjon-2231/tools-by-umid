@@ -9,7 +9,6 @@ export default function Home() {
   const router=useRouter()
   if(token){
     router.push("/tools")
-
   }
   return <Auth/>;
 }

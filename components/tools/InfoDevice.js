@@ -38,6 +38,7 @@ const InfoDevice = () => {
         infos.push({name: 'Dark theme', value: nameTheme})
         infos.push({name: 'App name', value: navigator.appName})
         infos.push({name: 'App code name', value: navigator.appCodeName})
+
         infos.push({name: 'Platform', value: navigator.platform})
         infos.push({name: 'Browser name', value: navigator.userAgent})
 
