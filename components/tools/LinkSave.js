@@ -30,6 +30,7 @@ const LinkSave = () => {
     const [deleteItem, setDeleteItem]=useState('')
     const [filterMode, setFilterMode]=useState({
         category: 'none',
+        type: 'none',
         firstNew: true,
     })
 
@@ -40,23 +41,24 @@ const LinkSave = () => {
 
     useEffect(()=>{
        getLinks()
-    }, [getLinks])
+    }, [])
 
     const toggle=()=>{
+
+        setModal(!modal)
         if(modal && editItem._id){
             setEditItem({})
         }
-        setModal(!modal)
-
     }
     const toggleFilter=()=>{
         setFilterModal(!filterModal)
     }
     const toggleDelete=()=>{
+
+        setDeleteModal(!deleteModal)
         if(deleteModal){
             setDeleteItem('')
         }
-        setDeleteModal(!deleteModal)
     }
     const toggleView=()=>{
         setViewModal(!viewModal)
@@ -145,10 +147,12 @@ const LinkSave = () => {
         }
         let result=[]
         setFilterMode(value)
-        if(value.category==='none'){
-            result=data
-        }else{
+        result=data
+        if(value.category!=='none'){
             result=filterCategory(value.category, data)
+        }
+        if(value.type!=='none'){
+            result=filterType(value.type, result)
         }
         if(value.firstNew){
             result=result.sort((a,b)=>{return b.date-a.date})
@@ -163,6 +167,15 @@ const LinkSave = () => {
         let result=[]
         data.map((i,n)=>{
             if(i.category===name){
+                result.push(i)
+            }
+        })
+        return  result
+    }
+    const filterType=(name, data)=>{
+        let result=[]
+        data.map((i, n)=>{
+            if(i.type===name){
                 result.push(i)
             }
         })
@@ -288,9 +301,26 @@ const LinkSave = () => {
                 <ModalHeader>Vew link</ModalHeader>
                 <ModalBody>
                     <AvForm>
-                        <AvField label='Link:' type='text' name='link' value={viewLink?.link} disabled={true}/>
-                        <AvField label='Description:' rows={5} type='textarea' name='description' value={viewLink?.description} disabled={true}/>
-                        <AvField label='Category:' type='text' name='category' value={viewLink?.category} disabled={true}/>
+                        <AvField
+                            label='Link:' type='text'
+                            name='link' value={viewLink?.link}
+                            disabled={true}
+                        />
+                        <AvField
+                            label='Description:'
+                            rows={5} type='textarea' name='description' value={viewLink?.description}
+                            disabled={true}
+                        />
+                        <AvField
+                            label='Category:' type='text'
+                            name='category' value={viewLink?.category?.slice(0, 1).toUpperCase()+viewLink?.category?.slice(1)}
+                            disabled={true}
+                        />
+                        <AvField
+                            label='Type:' type='text'
+                            name='type' value={viewLink?.type?.slice(0, 1).toUpperCase()+viewLink?.type?.slice(1)}
+                            disabled={true}
+                        />
                     </AvForm>
                 </ModalBody>
                 <ModalFooter className='py-2'>
@@ -323,8 +353,16 @@ const LinkSave = () => {
                             <option value="my-websites">My websites</option>
                             <option value="other">Other</option>
                         </AvField>
+                        <AvField type='select' name='type' value={filterMode.type}>
+                            <option value="none">None</option>
+                            <option value="text">Text</option>
+                            <option value="video">Video</option>
+                            <option value="music">Music</option>
+                            <option value="article">Article</option>
+                            <option value="website">Website</option>
+                            <option value="other">Other</option>
+                        </AvField>
                         <AvField label='First new' type='checkbox' name='firstNew' value={filterMode.firstNew}/>
-
 
                     </ModalBody>
                     <ModalFooter className='py-2'>

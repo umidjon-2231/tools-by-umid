@@ -21,7 +21,7 @@ const saveLink=async (req, res)=>{
                 link,
                 description,
                 category,
-                date
+                date, type, lastEdited
             } = req.body;
 
 
@@ -40,7 +40,7 @@ const saveLink=async (req, res)=>{
                 link,
                 description,
                 category,
-                date
+                date, type, lastEdited
             });
             await newLink.save();
             res.status(201).json({
