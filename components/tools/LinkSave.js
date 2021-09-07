@@ -36,11 +36,11 @@ const LinkSave = () => {
     const {isDarkTheme, nameTheme}=useThemeDetector()
     const router=useRouter()
     const {request}=useHttp()
-    const {token}=useAuth()
+    const {token, takeToken}=useAuth()
 
     useEffect(()=>{
        getLinks()
-    }, [])
+    }, [getLinks])
 
     const toggle=()=>{
         if(modal && editItem._id){
@@ -65,10 +65,10 @@ const LinkSave = () => {
     const getLinks=async ()=>{
         setLoading(true)
 
-        const tokenGet=await JSON.parse(localStorage.getItem(process.env.storageName))
+        const newToken=await takeToken()
         const res=await request('/api/link/get-link', 'GET', null,
             {
-                Authorization: `Bearer ${tokenGet?.token}`
+                Authorization: `Bearer ${newToken}`
             })
         if(res.data){
             await setContent(res.data)
@@ -85,14 +85,15 @@ const LinkSave = () => {
 
     const newLink= async (event, values)=>{
         setLoading(true)
+        const newToken=await takeToken()
         if(values.link.substr(0, 8)!=='https://' && values.link.substr(0, 8)!=='http://'){
             values.link="https://"+values.link
         }
         if(editItem._id){
-            const res=request('/api/link/edit-link','POST',
-                {...values, _id: editItem._id, date: editItem.date },
+            const res=await request('/api/link/edit-link','POST',
+                {...values, _id: editItem._id, date: editItem.date, lastEdited: Date.now()},
                 {
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${newToken}`
                 })
             if(res.status===200){
                 toast.success('Link edited')
@@ -102,7 +103,11 @@ const LinkSave = () => {
             }
 
         }else{
-            const res=await request('/api/link/save-link', 'POST', {...values, date: Date.now()},
+            const res=await request('/api/link/save-link', 'POST', {
+                ...values,
+                    date: Date.now(),
+                lastEdited: Date.now()
+                },
                 {
                     Authorization: `Bearer ${token}`
                 })
@@ -120,9 +125,10 @@ const LinkSave = () => {
 
     const deleteLink=async ()=>{
         setLoading(true)
+        const newToken=await takeToken()
         const res=await request('/api/link/delete-link', 'POST', {id: deleteItem._id},
             {
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${newToken}`
             })
         if(res.status===200){
             toast.success('Link deleted')
@@ -217,17 +223,31 @@ const LinkSave = () => {
                         <AvField
                             type='select'
                             name='category'
-                            label="Category"
-                            value={editItem._id?editItem?.category:'1'}
+                            label="Category:"
+                            value={editItem._id?editItem?.category:'useful'}
                         >
                             <option value="useful">Useful</option>
                             <option value="interesting">Interesting</option>
                             <option value="programming">Programming</option>
                             <option value="information">Information</option>
                             <option value="important">Important</option>
-                            <option value="my-websites">My websites</option>
+                            <option value="my websites">My websites</option>
                             <option value="other">Other</option>
                         </AvField>
+                        <AvField
+                            type='select'
+                            name='type'
+                            label="Type:"
+                            value={editItem._id?editItem?.type:'text'}
+                        >
+                            <option value="text">Text</option>
+                            <option value="video">Video</option>
+                            <option value="music">Music</option>
+                            <option value="article">Article</option>
+                            <option value="website">Website</option>
+                            <option value="other">Other</option>
+                        </AvField>
+
                     </ModalBody>
                     <ModalFooter className='py-2'>
                         <button

@@ -7,22 +7,28 @@ const getLink=async (req, res)=> {
     if(req.method==="GET"){
         try {
             if(!req.headers.authorization){
-                throw new Error('Not authorization')
+                throw new Error('Not authorization!')
             }
-            const token=req.headers.authorization.split(' ')[1] || 404;
-
+            const token=req.headers.authorization.split(' ')[1];
 
             try{
-                const verify=await jwt.verify(token, process.env.jwtSecret)
+                await jwt.verify(token, process.env.jwtSecret)
             }catch (e) {
-                return res.status(401).json({message: e.message, status: 401})
+                return res.status(401).json({
+                    message: 'There is no space on the server for hackers',
+                    // message: e.message,
+                    status: 401
+                })
             }
             const hasLink=await Link.find()
 
             res.status(200).json({message: 'Ok!', status: 200, data:  hasLink})
 
         }catch (e) {
-            res.status(500).json({message: e.message, status: 500, })
+            if(e.message==='Not authorization'){
+                return res.status(401).json({message: e.message, status: 401})
+            }
+            res.status(500).json({message: e.message, status: 500})
         }
     }
 

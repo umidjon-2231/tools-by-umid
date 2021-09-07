@@ -24,6 +24,16 @@ export const useAuth=()=>{
 
 
     }, [])
+
+    const takeToken=useCallback(()=>{
+        const data=JSON.parse(localStorage.getItem(storageName))
+        if(data && data.token){
+            setToken(data.token)
+            return data.token
+        }
+
+    },[])
+
     useEffect(()=>{
         const data=JSON.parse(localStorage.getItem(storageName))
 
@@ -46,5 +56,5 @@ export const useAuth=()=>{
     }, [login])
 
 
-    return {login, logout, token, ready}
+    return {login, logout, token, ready, takeToken}
 }
