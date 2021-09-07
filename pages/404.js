@@ -1,10 +1,14 @@
 import React from 'react';
 import Link from "next/link"
+import {NextSeo} from "next-seo"
+import {useRouter} from "next/router"
 
 const Custom404 = () => {
+    const router=useRouter()
     return (
         <div>
-            <Link href="/">
+            <NextSeo title='404'/>
+            <div onClick={()=>{router.back()}}>
                 <div className="container">
                     <div className="row">
                         <div className="col-sm-12 col-md-12 ">
@@ -643,7 +647,7 @@ const Custom404 = () => {
                         </div>
                     </div>
                 </div>
-            </Link>
+            </div>
         </div>
     );
 };
