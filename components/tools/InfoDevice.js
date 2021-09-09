@@ -5,6 +5,7 @@ import Loader from "../Loader"
 import {useHttp} from "../../hooks/https.hook"
 import axios from "axios"
 import {useThemeDetector} from "../../toolsOfProject"
+import Navbar from "../Navbar"
 
 const InfoDevice = () => {
     const [content, setContent]=useState([])
@@ -56,7 +57,7 @@ const InfoDevice = () => {
 
 
     return (
-        <div>
+        <Navbar name='Info of device'>
             <NextSeo
                 title={`Tools of Umid | ${
                     router.query.name.substr(0 ,1).toUpperCase()+router.query.name.substr(1)
@@ -65,8 +66,6 @@ const InfoDevice = () => {
             {loading? <Loader/>:''}
 
             <div className="container homepage">
-                <h1 className="mt-5 text-center">Info of device</h1>
-                <div className=" col-10 mx-auto my-4 bg-info" style={{height: "2px"}}/>
                 <div className="content">
                     <div className="row">
 
@@ -99,7 +98,7 @@ const InfoDevice = () => {
                 </div>
 
             </div>
-        </div>
+        </Navbar>
     );
 };
 

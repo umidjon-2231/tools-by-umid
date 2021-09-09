@@ -16,6 +16,7 @@ import {useHttp} from "../../hooks/https.hook"
 import {toast} from "react-toastify"
 import Loader from "../Loader"
 import {useAuth} from "../../hooks/auth.hook"
+import Navbar from "../Navbar"
 
 const LinkSave = () => {
     const [modal, setModal]=useState(false)
@@ -195,7 +196,7 @@ const LinkSave = () => {
 
 
     return (
-        <div>
+        <Navbar name='Link save'>
             <NextSeo
                 title={`Tools of Umid | ${
                     router.query.name.substr(0 ,1).toUpperCase()+router.query.name.substr(1)
@@ -384,9 +385,10 @@ const LinkSave = () => {
 
             </Modal>
 
-            <div className="container homepage">
-                <h1 className="mt-5 text-center">Link save</h1>
-                <div className=" col-10 mx-auto my-4 bg-info" style={{height: "2px"}}/>
+            <div className=" ">
+                {/*<h1 className="mt-5 text-center">Link save</h1>*/}
+                {/*<div className=" col-10 mx-auto my-4 bg-info" style={{height: "2px"}}/>*/}
+
                 <div className="row align-items-center" style={{paddingLeft: 10, paddingRight: 10}}>
 
                     <div className="col-lg-8 col-sm-6 col-12">
@@ -503,7 +505,7 @@ const LinkSave = () => {
                 </div>
 
             </div>
-        </div>
+        </Navbar>
 
     );
 };

@@ -35,6 +35,9 @@ body{
       }
 
     }
+    .form-control{
+      border: 1px solid #ced4da;
+    }
     .dropdown-item:hover{
       text-shadow: 2px 2px 3px var(--dark)!important;
     }
@@ -67,11 +70,12 @@ body{
     .form-control{
       background-color: var(--dark);
       color: aliceblue;
-      border-color: #f1f1f1;
+      border: 1px solid #ced4da;
       &:focus{
         background-color: var(--dark);
         color: aliceblue;
       }
+
       &:disabled{
         background-color: #505050;
         color: aliceblue;

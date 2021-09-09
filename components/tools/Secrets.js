@@ -2,6 +2,7 @@ import React from 'react';
 import {useAuth} from "../../hooks/auth.hook"
 import {NextSeo} from "next-seo"
 import {useRouter} from "next/router"
+import Navbar from "../Navbar"
 
 const Secrets = () => {
     const {token, logout}=useAuth()
@@ -9,7 +10,7 @@ const Secrets = () => {
     const router=useRouter()
 
     return (
-        <div>
+        <Navbar name='Secrets'>
             <NextSeo
                 title={`Tools of Umid | ${
                     router.query.name.substr(0 ,1).toUpperCase()+router.query.name.substr(1)
@@ -17,10 +18,8 @@ const Secrets = () => {
             />
             <div className="container">
 
-                <h1 className="mt-5 text-center">Secrets</h1>
-                <div className=" col-10 mx-auto my-4 bg-info" style={{height: "2px"}}/>
             </div>
-        </div>
+        </Navbar>
 
     );
 };

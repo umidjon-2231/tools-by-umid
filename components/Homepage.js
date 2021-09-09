@@ -1,49 +1,21 @@
 import React, {useEffect, useState} from 'react';
 import {useAuth} from "../hooks/auth.hook"
-import { useThemeDetector} from "../toolsOfProject"
+import {tools, useThemeDetector} from "../toolsOfProject"
 import Link from "next/link"
 import Loader from "./Loader"
 import {NextSeo} from "next-seo"
 
 const Homepage = () => {
-    const [content, setContent]=useState([
-        {
-            name: 'Decoder',
-            url: '/decoder',
-            src: 'decode-icon.png'
-        },
-        {
-            name: 'Link save',
-            url: '/link-save',
-            src: 'link-blue-icon.png'
-        },
-        {
-            name: 'Secrets',
-            url: '/secrets',
-            src: 'top-secret-stamp.png'
-        },
-        {
-            name: 'Info of device',
-            url: '/info-device',
-            src: 'info-icon.png'
-        },
-        {
-            name: "Settings",
-            url: "/settings",
-            src: 'setting-icon.png'
-        }
-    ])
-    const {token, logout}=useAuth()
-    const jwt=require('jsonwebtoken')
+
     const {isDarkTheme}=useThemeDetector()
 
 
 
     useEffect(()=>{
 
-        setContent(content.sort((a, b)=>
-           a.name.localeCompare(b.name)
-        ))
+        // setContent(content.sort((a, b)=>
+        //    a.name.localeCompare(b.name)
+        // ))
 
 
 
@@ -63,7 +35,7 @@ const Homepage = () => {
                 <div className=" col-10 mx-auto my-4 bg-info" style={{height: "2px"}}/>
                 <div className="content">
                     <div className="row">
-                        {content.map((i, n)=>{
+                        {tools.map((i, n)=>{
                             return(
                                 <div key={n} className="col-6 col-sm-4 col-lg-3 my-3">
                                     <Link href={'/tools'+i.url} >

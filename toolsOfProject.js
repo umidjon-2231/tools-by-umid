@@ -18,6 +18,34 @@ export const useThemeDetector = () => {
 }
 
 
+export const tools=[
+    {
+        name: 'Decoder',
+        url: '/decoder',
+        src: 'decode-icon.png'
+    },
+    {
+        name: 'Link save',
+        url: '/link-save',
+        src: 'link-blue-icon.png'
+    },
+    {
+        name: 'Secrets',
+        url: '/secrets',
+        src: 'top-secret-stamp.png'
+    },
+    {
+        name: 'Info of device',
+        url: '/info-device',
+        src: 'info-icon.png'
+    },
+    {
+        name: "Settings",
+        url: "/settings",
+        src: 'setting-icon.png'
+    }
+]
+
 
 
 
