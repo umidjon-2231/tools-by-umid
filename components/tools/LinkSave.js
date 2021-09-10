@@ -427,8 +427,8 @@ const LinkSave = () => {
 
 
                 </div>
-                <div className="content mt-3">
-                    <div className="row">
+                <div className="content link border-top border-primary mt-3">
+                    <div className="row ">
 
                         {links.length!==0?links.map((i,n)=>{
                             const domainName=(url)=>{
@@ -442,7 +442,7 @@ const LinkSave = () => {
                             }
 
                             return(
-                                <div key={i._id} className="col-lg-4 col col-sm-6 my-2">
+                                <div key={i._id} className="col-lg-4 col-12 col-sm-6 my-2">
                                         <div className="custom-card hover" onClick={()=>{setViewLink(i);toggleView()}}>
                                             <UncontrolledDropdown size='sm'>
                                                 <DropdownToggle color='transparent'

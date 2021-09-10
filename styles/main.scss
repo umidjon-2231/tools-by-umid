@@ -11,11 +11,13 @@ body{
   overflow-y: hidden;
   .content{
     padding: 0 10px 0 10px;
-    height: 67vh;
+    height: 75vh;
     overflow-y: auto;
     overflow-x: hidden;
 
-
+  }
+  .content.link{
+    height: 65vh;
   }
 }
 .row{

@@ -8,7 +8,7 @@ const Custom404 = () => {
     return (
         <div>
             <NextSeo title='404'/>
-            <div onClick={()=>{router.back()}}>
+            <div onClick={()=>{router.push('/')}}>
                 <div className="container">
                     <div className="row">
                         <div className="col-sm-12 col-md-12 ">
