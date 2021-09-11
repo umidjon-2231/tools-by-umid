@@ -34,20 +34,20 @@ export const useAuth=()=>{
 
     },[])
 
-    useEffect(()=>{
-        const data=JSON.parse(localStorage.getItem(storageName))
+    useEffect(async ()=>{
+        const data=await JSON.parse(localStorage.getItem(storageName))
 
         if(data && data.token){
             setToken(data.token)
             login(data.token)
             try {
-                const verify=jwt.verify(data.token, 'Umidjon2231')
+                await jwt.verify(data.token, 'Umidjon2231')
             }catch (e) {
                 if(router.pathname!=='/' &&
                     e.name==='TokenExpiredError' &&
                     router.pathname!=='/guest-tools/[name]' && router.pathname!=='/guest-tools'){
-                    toast.error("Your token expired, please repeat password")
-                    logout()
+                    // toast.error("Your token expired, please repeat password")
+                    await logout()
                 }
             }
         }

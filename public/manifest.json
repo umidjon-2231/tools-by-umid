@@ -1,6 +1,7 @@
 {
   "short_name": "Tools of Umid",
   "name": "Created by Umidjon",
+  "lang": "en-Us",
   "icons": [
     {
       "src": "icons/main-logo-ico.ico",
@@ -20,7 +21,7 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#343A40",
+  "theme_color": "transparent",
   "background_color": "#f1f1f1",
   "permissions": [
     "tabs",
@@ -29,9 +30,5 @@
   ],
   "optional_permissions": [
     "unlimitedStorage"
-  ],
-  "host_permissions": [
-    "http://www.blogger.com/",
-    "http://*.google.com/"
   ]
 }
