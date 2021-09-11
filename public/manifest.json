@@ -21,7 +21,7 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "transparent",
+  "theme_color": "#fff",
   "background_color": "#f1f1f1",
   "permissions": [
     "tabs",
