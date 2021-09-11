@@ -106,18 +106,25 @@ body{
 
 }
 
-.bm-burger-button{
-  //all: unset!important;
-  //z-index: 1000!important;
-  //position: fixed!important;
-  //width: 36px!important;
-  //height: 30px!important;
-  //right: 15%!important;
-  //top: 56px!important;
+.stamp {
+  font-weight: 700;
+  display: inline-block;
+  padding: 0.25rem 1rem;
+  text-transform: uppercase;
+  border-radius: 1rem;
+  font-family: 'Courier';
+  -webkit-mask-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/8399/grunge.png');
+  -webkit-mask-size: 944px 604px;
+  mix-blend-mode: color;
+  color: red;
+  border: 0.5rem double red;
+  transform: rotate(10deg);
+  -webkit-mask-position: 2rem 3rem;
+  font-size: 2rem;
+  user-select: none;
 }
-.bm-burger-bars{
-  //background-color: var(--primary) !important;
-}
+
+
 
 
 
