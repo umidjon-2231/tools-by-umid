@@ -13,7 +13,7 @@ const Decoder = () => {
                 }`}
             />
             <div className="container">
-                <span className="stamp">Top secret</span>
+
             </div>
         </Navbar>
 

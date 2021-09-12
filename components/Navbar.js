@@ -70,9 +70,11 @@ const Navbar = ({name, children}) => {
 
                     {tools.map(i=>{
                         return(
-                            <div className="d-flex align-items-center my-3">
+                            <div className={`d-flex align-items-center link-navbar my-3 ${router.query.name===i.url.slice(1)?'active':''}`}>
                                 <img src={`/images/${i.src}`} alt="" width={40} style={{marginRight: 10}}/>
-                                <Link href={"/tools"+i.url}>{i.name}</Link>
+                                <Link href={"/tools"+i.url}>
+                                    <a className={`${router.query.name===i.url.slice(1)?'text-light':''}`}>{i.name}</a>
+                                </Link>
                             </div>
                         )
                     })}

@@ -6,8 +6,11 @@
 
 
 body{
+
   @media (prefers-color-scheme: light) {
+
     color: var(--dark);
+    //color: red;
     background-color: #f1f1f1;
     //::-webkit-scrollbar {
     //  width: 10px;
@@ -42,11 +45,12 @@ body{
       text-shadow: 2px 2px 3px var(--dark)!important;
     }
 
-  }
 
+  }
   
   @media (prefers-color-scheme: dark) {
     color: var(--light);
+    //color: red;
     background-color: var(--dark)!important;
     ::-webkit-scrollbar {
       width: 10px;
@@ -111,7 +115,9 @@ body{
       text-shadow: 2px 2px 3px #f1f1f1!important;
     }
 
+
   }
+
 }
 
 

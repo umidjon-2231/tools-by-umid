@@ -5,7 +5,6 @@ body{
 }
 
 
-
 .homepage{
   height: 100vh;
   overflow-y: hidden;
@@ -111,8 +110,8 @@ body{
   display: inline-block;
   padding: 0.25rem 1rem;
   text-transform: uppercase;
-  border-radius: 1rem;
-  font-family: 'Courier';
+  //border-radius: 1rem;
+  font-family: 'Courier', sans-serif;
   -webkit-mask-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/8399/grunge.png');
   -webkit-mask-size: 944px 604px;
   mix-blend-mode: color;
@@ -122,6 +121,51 @@ body{
   -webkit-mask-position: 2rem 3rem;
   font-size: 2rem;
   user-select: none;
+}
+.link-navbar{
+  position: relative;
+
+  &:after{
+    content: '';
+    height: 0;
+    width: 4px;
+    background-color: #f1f1f1;
+    transition: all 0.5s linear;
+    position: absolute;
+    right: -19.85%;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+  }
+  &:before{
+    content: "";
+    height: 0;
+    width: 4px;
+    //background-color: #f61e2e;
+    background-color: #f1f1f1;
+    transition: all 0.5s linear;
+    position: absolute;
+    left: -19.85%;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+  }
+  &:hover, &.active{
+    a{color: #f1f1f1}
+    &:after{
+      height: 100%;
+    }
+    &:before{
+      height: 100%;
+    }
+  }
+}
+.bm-menu-wrap{
+  border-left: 1px solid var(--primary);
 }
 
 
