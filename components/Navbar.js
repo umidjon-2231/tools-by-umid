@@ -88,7 +88,7 @@ const Navbar = ({name, children}) => {
 
 
             <main id='page-wrap'>
-                <div className=" col mx-auto mt-2 mb-4 bg-info" style={{height: "2px"}}/>
+                <div className=" col mx-auto mt-2 mb-4 bg-primary" style={{height: "2px"}}/>
                 <div className="">
                     {children}
                 </div>
