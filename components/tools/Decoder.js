@@ -1,10 +1,16 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {NextSeo} from "next-seo"
 import {useRouter} from "next/router"
 import Navbar from "../Navbar"
 
 const Decoder = () => {
     const router=useRouter()
+
+    useEffect(()=>{
+
+    })
+
+
     return (
         <Navbar name='Decoder'>
             <NextSeo
