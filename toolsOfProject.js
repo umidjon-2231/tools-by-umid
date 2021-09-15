@@ -8,9 +8,9 @@ export const useThemeDetector = () => {
     const [isDarkTheme, setIsDarkTheme] = useState(false);
 
 
-    useEffect(async () => {
-        let theme=await getCurrentTheme()
-        await setIsDarkTheme(theme)
+    useEffect( () => {
+        let theme= getCurrentTheme()
+        setIsDarkTheme(theme)
 
     }, []);
 

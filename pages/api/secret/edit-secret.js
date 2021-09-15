@@ -1,18 +1,17 @@
-const Link=require('../../../models/link')
+const Secret=require('../../../models/link')
 import connectDB from "../../../middleware/mongodb"
 const jwt=require('jsonwebtoken')
 
 
-const deleteLink=async (req, res)=>{
-    if(req.method==="DELETE"){
+const editLink=async (req, res)=>{
+    if(req.method==="PUT"){
         try {
             if(!req.headers.authorization){
-                throw new Error('Not authorization')
+                throw new Error('Not authorization.')
             }
 
             const token=req.headers.authorization.split(' ')[1];
-            const {id} = req.body;
-
+            const {_id, link, description, category, date, type, lastEdited} = req.body;
             try{
                 await jwt.verify(token, process.env.jwtSecret)
             }catch (e) {
@@ -20,14 +19,9 @@ const deleteLink=async (req, res)=>{
             }
 
 
+            const editedLink = await Secret.updateOne({_id}, {link, description, category, date, type, lastEdited});
 
-
-
-            const deletedLink = await Link.findOneAndDelete({
-                _id: id
-            });
-
-            if (!deletedLink) {
+            if (!editedLink) {
                 return res.status(400).json({
                     message: "Not find link with this id",
                     status: 400
@@ -36,7 +30,7 @@ const deleteLink=async (req, res)=>{
 
 
             res.status(200).json({
-                message: 'Link deleted',
+                message: 'Secret edited',
                 status: 200,
             });
 
@@ -46,7 +40,7 @@ const deleteLink=async (req, res)=>{
     }
 
 }
-export default connectDB(deleteLink)
+export default connectDB(editLink)
 
 
 

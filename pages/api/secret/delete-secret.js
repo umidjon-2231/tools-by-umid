@@ -1,4 +1,4 @@
-const Link=require('../../../models/link')
+const Secret=require('../../../models/secret')
 import connectDB from "../../../middleware/mongodb"
 const jwt=require('jsonwebtoken')
 
@@ -7,7 +7,7 @@ const deleteLink=async (req, res)=>{
     if(req.method==="DELETE"){
         try {
             if(!req.headers.authorization){
-                throw new Error('Not authorization')
+                throw new Error('Not authorization!')
             }
 
             const token=req.headers.authorization.split(' ')[1];
@@ -23,7 +23,7 @@ const deleteLink=async (req, res)=>{
 
 
 
-            const deletedLink = await Link.findOneAndDelete({
+            const deletedLink = await Secret.findOneAndDelete({
                 _id: id
             });
 
@@ -36,7 +36,7 @@ const deleteLink=async (req, res)=>{
 
 
             res.status(200).json({
-                message: 'Link deleted',
+                message: 'Secret deleted',
                 status: 200,
             });
 

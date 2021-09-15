@@ -93,7 +93,7 @@ const LinkSave = () => {
             values.link="https://"+values.link
         }
         if(editItem._id){
-            const res=await request('/api/link/edit-link','POST',
+            const res=await request('/api/link/edit-link','PUT',
                 {...values, _id: editItem._id, date: editItem.date, lastEdited: Date.now()},
                 {
                     Authorization: `Bearer ${newToken}`
@@ -129,7 +129,7 @@ const LinkSave = () => {
     const deleteLink=async ()=>{
         setLoading(true)
         const newToken=await takeToken()
-        const res=await request('/api/link/delete-link', 'POST', {id: deleteItem._id},
+        const res=await request('/api/link/delete-link', 'DELETE', {id: deleteItem._id},
             {
                 Authorization: `Bearer ${newToken}`
             })
@@ -163,7 +163,6 @@ const LinkSave = () => {
         setLinks(result)
         setFilterModal(false)
     }
-
     const filterCategory=(name, data)=>{
         let result=[]
         data.map((i,n)=>{
@@ -182,7 +181,6 @@ const LinkSave = () => {
         })
         return  result
     }
-
     const searchResult=async (name)=>{
         let filteredArray=[]
         filteredArray=await content.filter(a=>{

@@ -4,7 +4,7 @@ const jwt=require('jsonwebtoken')
 
 
 const editLink=async (req, res)=>{
-    if(req.method==="POST"){
+    if(req.method==="PUT"){
         try {
             if(!req.headers.authorization){
                 throw new Error('Not authorization')

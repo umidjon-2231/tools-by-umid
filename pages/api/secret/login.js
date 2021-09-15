@@ -7,6 +7,20 @@ const handler=async (req, res)=> {
     if(req.method==="POST"){
         try {
             const {password}=req.body
+            if(!req.headers.authorization){
+                throw new Error('Not authorization!!')
+            }
+            const tokenS=req.headers.authorization.split(' ')[1];
+
+            try{
+                await jwt.verify(tokenS, process.env.jwtSecret)
+            }catch (e) {
+                return res.status(401).json({message: e.message, status: 401})
+            }
+
+
+
+
             const user=await User.findOne({password})
             if(!user){
                 return res.status(400).json({message: "Error password", status: 400})
@@ -19,7 +33,7 @@ const handler=async (req, res)=> {
                     password
                 },
                 secretKey,
-                {expiresIn: '2h'}
+                {expiresIn: '1h'}
             )
             res.json({token, status: 200})
         }catch (e) {
