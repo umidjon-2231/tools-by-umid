@@ -6,9 +6,7 @@ import Navbar from "../Navbar"
 const Decoder = () => {
     const router=useRouter()
 
-    useEffect(()=>{
-
-    })
+    useEffect(()=>{})
 
 
     return (

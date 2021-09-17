@@ -16,7 +16,7 @@ const getLink=async (req, res)=> {
             }catch (e) {
                 return res.status(401).json({
                     message: 'There is no space on the server for hackers',
-                    // message: e.message,
+                    errorMessage: e.message,
                     status: 401
                 })
             }

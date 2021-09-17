@@ -4,16 +4,7 @@ import {NextSeo} from "next-seo"
 import {useRouter} from "next/router"
 import Navbar from "../Navbar"
 import {AvForm, AvField} from 'availity-reactstrap-validation'
-import {
-    DropdownItem,
-    DropdownMenu,
-    DropdownToggle,
-    Modal,
-    ModalBody,
-    ModalFooter,
-    ModalHeader,
-    UncontrolledDropdown
-} from "reactstrap"
+import {DropdownItem, DropdownMenu, DropdownToggle, Modal, ModalBody, ModalFooter, ModalHeader, UncontrolledDropdown} from "reactstrap"
 import {useThemeDetector} from "../../toolsOfProject"
 import {useHttp} from "../../hooks/https.hook"
 import Loader from "../Loader"
@@ -22,25 +13,36 @@ import {toast} from "react-toastify"
 const Secrets = () => {
     const [data, setData]=useState([])
     const [content, setContent]=useState(null)
+    const [editItem, setEditItem]=useState({})
+    const [deleteItem, setDeleteItem]=useState({})
+
     const [checkModal, setCheckModal]=useState(false)
     const [newSecretModal, setNewSecretModal]=useState(false)
-    const [loading, setLoading]=useState(false)
     const [filterModal, setFilterModal]=useState(false)
-    const [filterMode, setFilterMode]=useState({})
+
+    const [loading, setLoading]=useState(false)
     const [tokenS, setTokenS]=useState(null)
 
+    const [filterMode, setFilterMode]=useState({})
+    const [secretMode, setSecretMode]=useState('loveSecret')
 
 
 
-    const {token,logout}=useAuth()
+
+    const {token}=useAuth()
     const {request}=useHttp()
     const jwt=require('jsonwebtoken')
 
-    const {isDarkTheme}=useThemeDetector()
+    const {isDarkTheme, nameTheme}=useThemeDetector()
 
     const router=useRouter()
     const toggle=()=>{setCheckModal(!checkModal)}
-    const newSecretToggle=()=>{setNewSecretModal(!newSecretModal)}
+    const newSecretToggle=()=>{
+        if(newSecretModal){
+            setSecretMode('loveSecret')
+        }
+        setNewSecretModal(!newSecretModal)
+    }
     const toggleFilter=()=>{
         setFilterModal(!filterModal)
     }
@@ -49,9 +51,13 @@ const Secrets = () => {
 
         const tokenS=JSON.parse(sessionStorage.getItem('secret'))
         setTokenS(tokenS)
-        if(!!tokenS){
-            await getSecrets()
+        try {
+            await jwt.verify(tokenS, process.env.jwtSecret)
+        }catch (e) {
+            return e.message
         }
+        await getSecrets()
+
     },[])
 
     const checkPassword=async (event, values)=>{
@@ -82,6 +88,7 @@ const Secrets = () => {
     }
 
     const newSecret=async (event, values)=>{
+        setLoading(true)
         const value={
             category: values.category
             , date: Date.now(),
@@ -99,6 +106,9 @@ const Secrets = () => {
         }else{
             toast.error(res.message)
         }
+        newSecretToggle()
+        await getSecrets()
+
 
     }
 
@@ -142,10 +152,10 @@ const Secrets = () => {
     //     return  result
     // }
 
-    const searchResult=async (name)=>{
+    const searchResult=(name)=>{
         let filteredArray=[]
-        filteredArray=await content.filter(a=>{
-            return a.link.toUpperCase().includes(name.toUpperCase()) || a.description.toUpperCase().includes(name.toUpperCase())
+        filteredArray=data.filter(a=>{
+            return a.content.name.toUpperCase().includes(name.toUpperCase()) || a.description.toUpperCase().includes(name.toUpperCase())
         })
         setContent(filteredArray)
 
@@ -219,15 +229,93 @@ const Secrets = () => {
                 <AvForm onValidSubmit={newSecret}>
                     <ModalBody>
                         <AvField
+                            type='select'
+                            name='category'
+                            label="Category:"
+                            // value={editItem._id?editItem?.category:'loveSecret'}
+                            onChange={(e)=>{setSecretMode(e.target.value)}}
+                        >
+                            <option value="loveSecret">Love secret</option>
+                            <option value="criminalSecret">Criminal secret</option>
+                            <option value="strangerSecret">Stranger secret</option>
+                            <option value="mySecret">My secret</option>
+                        </AvField>
+                        {secretMode!=='mySecret'?
+                        <AvField
                             type='text'
-                            name="name"
-                            placeholder="Link"
+                            name='source' placeholder='Enter a name of source'
                             autoComplete='off'
-                            // value={editItem?.link}
                             validate={{
-                                required: {value: true, errorMessage: 'Please enter a name'}
+                                required: {value: true, errorMessage: 'Please enter a name of source'},
                             }}
-                        />
+                        />:''}
+
+                        {secretMode==='criminalSecret'?<>
+                            <AvField
+                                type='text'
+                                name='owner' placeholder='Enter a full name of secret owner'
+                                autoComplete='off'
+                                validate={{
+                                    required: {value: true, errorMessage: 'Please enter a full name of secret owner'},
+                                }}
+                            />
+                            <AvField
+                                type='text'
+                                name='owner' placeholder='Enter a name of accuser'
+                                autoComplete='off'
+                                validate={{
+                                    required: {value: true, errorMessage: 'Please enter a full name of accuser'},
+                                }}
+                            />
+                            </>
+                            :''}
+
+                        {secretMode==='strangerSecret'?<>
+                                <AvField
+                                    type='text'
+                                    name='owner' placeholder='Enter a full name of secret owner'
+                                    autoComplete='off'
+                                    validate={{
+                                        required: {value: true, errorMessage: 'Please enter a full name of secret owner'},
+                                    }}
+                                />
+                                <AvField
+                                    type='checkbox'
+                                    name='known' label='Does the owner of the secret know you know?'
+                                    value={'false'}
+                                />
+                            </>
+                            :''}
+                        {secretMode==='loveSecret'?<>
+                            <AvField
+                                type='text'
+                                name='boy' placeholder='Enter a full name of boy'
+                                autoComplete='off'
+                                validate={{
+                                    required: {value: true, errorMessage: 'Please enter a full name of boy'},
+                                }}
+                            />
+                                <AvField
+                                    type='checkbox'
+                                    name='known' label='Does the boy know she loves the he?'
+                                    value={'false'}
+                                />
+                            <AvField
+                                type='text'
+                                name='girl' placeholder='Enter a full name of girl'
+                                autoComplete='off'
+                                validate={{
+                                    required: {value: true, errorMessage: 'Please enter a full name of girl'},
+                                }}
+                            />
+                                <AvField
+                                    type='checkbox'
+                                    name='known' label='Does the girl know he loves the she?'
+                                    value={'false'}
+                                />
+                            </>
+                            :
+
                         <AvField
                             type='textarea'
                             rows={5}
@@ -239,21 +327,8 @@ const Secrets = () => {
                                 required: {value: true, errorMessage: 'Please enter a description'},
                                 minLength: {value: 5, errorMessage: 'Min length 5 characters'}
                             }}
-                        />
-                        <AvField
-                            type='select'
-                            name='category'
-                            label="Category:"
-                            // value={editItem._id?editItem?.category:'useful'}
-                        >
-                            <option value="useful">Useful</option>
-                            <option value="interesting">Interesting</option>
-                            <option value="programming">Programming</option>
-                            <option value="information">Information</option>
-                            <option value="important">Important</option>
-                            <option value="my websites">My websites</option>
-                            <option value="other">Other</option>
-                        </AvField>
+                        />}
+
 
                     </ModalBody>
                     <ModalFooter className='py-2'>
@@ -275,9 +350,9 @@ const Secrets = () => {
 
             <div className="container">
                 {/*<span className="stamp">Top secret</span>*/}
-                <div className="content">
+                <div className="">
                     {!content?
-                    <div className="text-center secret-icon">
+                    <div className=" text-center secret-icon">
                         <div>
                             <img src="/icons/file-icon.png" alt="" className=''/>
                         </div>
@@ -334,6 +409,44 @@ const Secrets = () => {
                                         return(
                                             <div key={i._id} className="col-lg-4 col-12 col-sm-6 my-2">
                                                 <div className="custom-card hover" >
+                                                    <UncontrolledDropdown size='sm'>
+                                                        <DropdownToggle color='transparent'
+                                                                        onClick={(event)=>{event.stopPropagation()}}
+                                                                        className={`ml-auto d-block`}>
+                                                            <img
+                                                                src={`/icons/three-points-icon-${nameTheme}.png`}
+                                                                alt=""/>
+                                                        </DropdownToggle>
+                                                        <DropdownMenu
+                                                            size='sm'
+                                                            className={`${isDarkTheme?'bg-dark':'bg-light'} border-primary `}>
+
+                                                            <DropdownItem
+                                                                size='sm'
+                                                                className={`text-primary w-100`}
+                                                                onClick={(event)=>{
+                                                                    // setEditItem(i);
+                                                                    newSecretToggle();
+                                                                    event.stopPropagation()}}
+                                                            >Edit</DropdownItem>
+                                                            <DropdownItem
+                                                                size='sm'
+                                                                className={`text-info w-100`}
+                                                                onClick={(event)=>{
+                                                                    // setViewLink(i);
+                                                                    // toggleView();
+                                                                    event.stopPropagation()}}
+                                                            >View</DropdownItem>
+                                                            <DropdownItem
+                                                                size='sm'
+                                                                className={`text-danger w-100`}
+                                                                onClick={(event)=>{
+                                                                    // setDeleteItem(i);
+                                                                    // toggleDelete();
+                                                                    event.stopPropagation()}}
+                                                            >Delete</DropdownItem>
+                                                        </DropdownMenu>
+                                                    </UncontrolledDropdown>
                                                     {i.description}
                                                 </div>
 
