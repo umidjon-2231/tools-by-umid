@@ -20,6 +20,7 @@ export const useAuth=()=>{
     const logout=useCallback(()=>{
         setToken(null)
         localStorage.removeItem(storageName)
+        sessionStorage.removeItem('secret')
         router.push('/')
 
 

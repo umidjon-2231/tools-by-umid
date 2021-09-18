@@ -17,6 +17,7 @@ import {toast} from "react-toastify"
 import Loader from "../Loader"
 import {useAuth} from "../../hooks/auth.hook"
 import Navbar from "../Navbar"
+import Title from "../Title";
 
 const LinkSave = () => {
     const [modal, setModal]=useState(false)
@@ -181,9 +182,9 @@ const LinkSave = () => {
         })
         return  result
     }
-    const searchResult=async (name)=>{
+    const searchResult= (name)=>{
         let filteredArray=[]
-        filteredArray=await content.filter(a=>{
+        filteredArray=content.filter(a=>{
             return a.link.toUpperCase().includes(name.toUpperCase()) || a.description.toUpperCase().includes(name.toUpperCase())
         })
         setLinks(filteredArray)
@@ -195,11 +196,7 @@ const LinkSave = () => {
 
     return (
         <Navbar name='Link save'>
-            <NextSeo
-                title={`Tools of Umid | ${
-                    router.query.name.substr(0 ,1).toUpperCase()+router.query.name.substr(1)
-                }`}
-            />
+            <Title/>
             {loading?<Loader/>:''}
 
 

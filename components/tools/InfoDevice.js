@@ -6,6 +6,7 @@ import {useHttp} from "../../hooks/https.hook"
 import axios from "axios"
 import {useThemeDetector} from "../../toolsOfProject"
 import Navbar from "../Navbar"
+import Title from "../Title";
 
 const InfoDevice = () => {
     const [content, setContent]=useState([])
@@ -58,11 +59,7 @@ const InfoDevice = () => {
 
     return (
         <Navbar name='Info of device'>
-            <NextSeo
-                title={`Tools of Umid | ${
-                    router.query.name.substr(0 ,1).toUpperCase()+router.query.name.substr(1)
-                }`}
-            />
+            <Title/>
             {loading? <Loader/>:''}
 
             <div className="container homepage">

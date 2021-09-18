@@ -9,6 +9,7 @@ import {useThemeDetector} from "../../toolsOfProject"
 import {useHttp} from "../../hooks/https.hook"
 import Loader from "../Loader"
 import {toast} from "react-toastify"
+import Title from "../Title";
 
 const Secrets = () => {
     const [data, setData]=useState([])
@@ -20,7 +21,7 @@ const Secrets = () => {
     const [newSecretModal, setNewSecretModal]=useState(false)
     const [filterModal, setFilterModal]=useState(false)
 
-    const [loading, setLoading]=useState(false)
+    const [loading, setLoading]=useState(true)
     const [tokenS, setTokenS]=useState(null)
 
     const [filterMode, setFilterMode]=useState({})
@@ -38,10 +39,11 @@ const Secrets = () => {
     const router=useRouter()
     const toggle=()=>{setCheckModal(!checkModal)}
     const newSecretToggle=()=>{
+        setNewSecretModal(!newSecretModal)
         if(newSecretModal){
             setSecretMode('loveSecret')
+            setEditItem({})
         }
-        setNewSecretModal(!newSecretModal)
     }
     const toggleFilter=()=>{
         setFilterModal(!filterModal)
@@ -54,9 +56,10 @@ const Secrets = () => {
         try {
             await jwt.verify(tokenS, process.env.jwtSecret)
         }catch (e) {
-            return e.message
+            return setLoading(false)
         }
         await getSecrets()
+
 
     },[])
 
@@ -89,15 +92,9 @@ const Secrets = () => {
 
     const newSecret=async (event, values)=>{
         setLoading(true)
-        const value={
-            category: values.category
-            , date: Date.now(),
-            lastEdited: Date.now(),
-            content: {
-                name: values.name
-            },
-            description: values.description
-        }
+        const value=valueParser(values)
+
+        // return setLoading(false)
         const res=await request('/api/secret/save-secret', 'POST', {...value}, {
             Authorization: `Bearer ${tokenS}`
         })
@@ -110,6 +107,77 @@ const Secrets = () => {
         await getSecrets()
 
 
+    }
+    const valueParser=(values)=>{
+
+        let newValue={
+            category: values.category,
+            date: Date.now(),
+            lastEdited: Date.now(),
+            content: {}
+        }
+
+        switch (values.category){
+            case "loveSecret":{
+                newValue.content.boy=values.boy
+                newValue.content.girl=values.boy
+                newValue.content.boyKnown=values.boyKnown
+                newValue.content.girlKnown=values.girlKnown
+                break
+            }
+            case "criminalSecret":{
+                newValue.content.owner=values.owner
+                newValue.content.accuser=values.accuser
+                break
+            }
+            case "strangerSecret":{
+                newValue.content.owner=values.owner
+                newValue.content.known=values.known
+                break
+            }
+            case "mySecret":{
+                if(!values.whoKnow.search(/Nobody/i)){
+                    newValue.content.whoKnow=null
+                }else{
+                    values.whoKnow=values.whoKnow.replace(/\n/g, ' ')
+                    let whoKnow=values.whoKnow.split(', ')
+
+                    let filteredArr=[]
+                    whoKnow.map((i)=>{
+                        let newTxt=''
+                       for(let txt=0; txt<i.length; txt++){
+                           i=i.replace(/\n/g, ' ')
+                           if(txt===0 && i[txt]!==' '){
+                               newTxt+=i[txt]
+                           }
+                           if(txt===i.length-1 && i[txt]!==' '){
+                               newTxt+=i[txt]
+                           }
+                           if(txt!==0 && txt!==i.length-1 && (i[txt]!==' ' || i[txt+1]!==' ')){
+                               newTxt+=i[txt]
+                           }
+                       }
+                       filteredArr.push(newTxt)
+
+                    })
+                    newValue.content.whoKnow=filteredArr
+                }
+
+
+                break
+            }
+        }
+        if(!!values.source){
+            newValue.content.source=values.source
+        }
+        if(!!values.description){
+            newValue.content.description=values.description
+        }
+
+
+
+        console.log(newValue)
+        return newValue
     }
 
     const filterChange=(e, value, data=null)=>{
@@ -155,7 +223,7 @@ const Secrets = () => {
     const searchResult=(name)=>{
         let filteredArray=[]
         filteredArray=data.filter(a=>{
-            return a.content.name.toUpperCase().includes(name.toUpperCase()) || a.description.toUpperCase().includes(name.toUpperCase())
+            return a.content?.source?.toUpperCase().includes(name.toUpperCase()) || a.description.toUpperCase().includes(name.toUpperCase())
         })
         setContent(filteredArray)
 
@@ -163,11 +231,7 @@ const Secrets = () => {
 
     return (
         <Navbar name='Secrets'>
-            <NextSeo
-                title={`Tools of Umid | ${
-                    router.query.name.substr(0 ,1).toUpperCase()+router.query.name.substr(1)
-                }`}
-            />
+           <Title />
             {loading?<Loader/>:''}
             <Modal isOpen={checkModal} toggle={toggle}>
                 <ModalHeader>
@@ -223,8 +287,7 @@ const Secrets = () => {
             </Modal>
             <Modal isOpen={newSecretModal} toggle={newSecretToggle}>
                 <ModalHeader>
-                    {/*{editItem._id?'Edit link':'Add new link'}*/}
-                    Add
+                    {editItem._id?'Edit secret':'Add new secret'}
                 </ModalHeader>
                 <AvForm onValidSubmit={newSecret}>
                     <ModalBody>
@@ -232,7 +295,7 @@ const Secrets = () => {
                             type='select'
                             name='category'
                             label="Category:"
-                            // value={editItem._id?editItem?.category:'loveSecret'}
+                            value={editItem._id?editItem?.category:secretMode}
                             onChange={(e)=>{setSecretMode(e.target.value)}}
                         >
                             <option value="loveSecret">Love secret</option>
@@ -240,6 +303,7 @@ const Secrets = () => {
                             <option value="strangerSecret">Stranger secret</option>
                             <option value="mySecret">My secret</option>
                         </AvField>
+
                         {secretMode!=='mySecret'?
                         <AvField
                             type='text'
@@ -248,7 +312,17 @@ const Secrets = () => {
                             validate={{
                                 required: {value: true, errorMessage: 'Please enter a name of source'},
                             }}
-                        />:''}
+                        />:
+                            <AvField
+                                type='textarea'
+                                rows={4}
+                                name="whoKnow"
+                                placeholder="Who know?(Example: Name1, Name2, ...) or Nobody"
+                                autoComplete='off'
+                                value={editItem._id?editItem.content.whoKnow?editItem.content.whoKnow.join(', '):'Nobody':''}
+                            />
+
+                        }
 
                         {secretMode==='criminalSecret'?<>
                             <AvField
@@ -281,7 +355,7 @@ const Secrets = () => {
                                 />
                                 <AvField
                                     type='checkbox'
-                                    name='known' label='Does the owner of the secret know you know?'
+                                    name='known' label='Does owner know that you know his(her) secret?'
                                     value={'false'}
                                 />
                             </>
@@ -297,7 +371,7 @@ const Secrets = () => {
                             />
                                 <AvField
                                     type='checkbox'
-                                    name='known' label='Does the boy know she loves the he?'
+                                    name='boyKnown' label='Does the boy know she loves the he?'
                                     value={'false'}
                                 />
                             <AvField
@@ -310,7 +384,7 @@ const Secrets = () => {
                             />
                                 <AvField
                                     type='checkbox'
-                                    name='known' label='Does the girl know he loves the she?'
+                                    name='girlKnown' label='Does the girl know he loves the she?'
                                     value={'false'}
                                 />
                             </>
@@ -322,7 +396,7 @@ const Secrets = () => {
                             name="description"
                             placeholder="Description"
                             autoComplete='off'
-                            // value={editItem?.description}
+                            value={editItem?.content.description}
                             validate={{
                                 required: {value: true, errorMessage: 'Please enter a description'},
                                 minLength: {value: 5, errorMessage: 'Min length 5 characters'}
@@ -425,7 +499,8 @@ const Secrets = () => {
                                                                 size='sm'
                                                                 className={`text-primary w-100`}
                                                                 onClick={(event)=>{
-                                                                    // setEditItem(i);
+                                                                    setEditItem(i);
+                                                                    setSecretMode(i.category)
                                                                     newSecretToggle();
                                                                     event.stopPropagation()}}
                                                             >Edit</DropdownItem>
@@ -447,7 +522,7 @@ const Secrets = () => {
                                                             >Delete</DropdownItem>
                                                         </DropdownMenu>
                                                     </UncontrolledDropdown>
-                                                    {i.description}
+                                                    {i.content?.description}
                                                 </div>
 
                                             </div>
