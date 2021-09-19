@@ -29,7 +29,7 @@ const LinkSave = () => {
     const [links, setLinks]=useState([])
     const [content, setContent]=useState([])
     const [editItem, setEditItem]=useState({})
-    const [deleteItem, setDeleteItem]=useState('')
+    const [deleteItem, setDeleteItem]=useState({})
     const [filterMode, setFilterMode]=useState({
         category: 'none',
         type: 'none',
@@ -37,7 +37,6 @@ const LinkSave = () => {
     })
 
     const {isDarkTheme, nameTheme}=useThemeDetector()
-    const router=useRouter()
     const {request}=useHttp()
     const {token, takeToken}=useAuth()
 

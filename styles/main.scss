@@ -74,10 +74,10 @@ body{
   transition: all linear 0.5s;
   p{
     white-space: nowrap;
-    overflow-x: hidden;
+    overflow: hidden;
     width: 100%;
     text-overflow: ellipsis;
-    direction: rtl;
+    height: 2rem;
   }
 
 
@@ -90,9 +90,9 @@ body{
     }
   }
   .body-link{
-    height: 50px;
+    //height: 50px;
     width: 100%;
-    overflow: hidden;
+    //overflow: hidden;
 
     h5{
       text-overflow: ellipsis;

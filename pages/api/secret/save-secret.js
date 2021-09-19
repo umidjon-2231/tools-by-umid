@@ -19,7 +19,7 @@ const saveLink=async (req, res)=>{
             const {
                 content,
                 category,
-                date, lastEdited, description
+                date, lastEdited
             } = req.body;
 
 
@@ -27,7 +27,8 @@ const saveLink=async (req, res)=>{
             const secret = new Secret({
                 content,
                 category,
-                date, lastEdited, description
+                date: Date.now(),
+                lastEdited: Date.now()
             });
             await secret.save();
             res.status(201).json({

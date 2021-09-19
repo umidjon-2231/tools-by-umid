@@ -1,4 +1,4 @@
-const Secret=require('../../../models/link')
+const Secret=require('../../../models/secret')
 import connectDB from "../../../middleware/mongodb"
 const jwt=require('jsonwebtoken')
 
@@ -11,7 +11,7 @@ const editLink=async (req, res)=>{
             }
 
             const token=req.headers.authorization.split(' ')[1];
-            const {_id, link, description, category, date, type, lastEdited} = req.body;
+            const {_id, category, date, content} = req.body;
             try{
                 await jwt.verify(token, process.env.jwtSecret)
             }catch (e) {
@@ -19,14 +19,7 @@ const editLink=async (req, res)=>{
             }
 
 
-            const editedLink = await Secret.updateOne({_id}, {link, description, category, date, type, lastEdited});
-
-            if (!editedLink) {
-                return res.status(400).json({
-                    message: "Not find link with this id",
-                    status: 400
-                });
-            }
+            await Secret.updateOne({_id}, { category, date, lastEdited: Date.now(), content});
 
 
             res.status(200).json({

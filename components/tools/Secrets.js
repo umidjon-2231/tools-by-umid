@@ -16,10 +16,13 @@ const Secrets = () => {
     const [content, setContent]=useState(null)
     const [editItem, setEditItem]=useState({})
     const [deleteItem, setDeleteItem]=useState({})
+    const [viewItem, setViewItem]=useState({})
 
     const [checkModal, setCheckModal]=useState(false)
     const [newSecretModal, setNewSecretModal]=useState(false)
     const [filterModal, setFilterModal]=useState(false)
+    const [deleteModal, setDeleteModal]=useState(false)
+    const [viewModal, setViewModal]=useState(false)
 
     const [loading, setLoading]=useState(true)
     const [tokenS, setTokenS]=useState(null)
@@ -43,6 +46,18 @@ const Secrets = () => {
         if(newSecretModal){
             setSecretMode('loveSecret')
             setEditItem({})
+        }
+    }
+    const toggleDelete=()=>{
+        setDeleteModal(!deleteModal)
+        if(deleteModal){
+            setDeleteItem({})
+        }
+    }
+    const toggleView = () => {
+        setViewModal(!viewModal)
+        if(viewModal){
+            setViewItem({})
         }
     }
     const toggleFilter=()=>{
@@ -94,15 +109,23 @@ const Secrets = () => {
         setLoading(true)
         const value=valueParser(values)
 
-        // return setLoading(false)
-        const res=await request('/api/secret/save-secret', 'POST', {...value}, {
-            Authorization: `Bearer ${tokenS}`
-        })
-        if(res.status===201){
-            toast.success('Secret created')
+        if(editItem._id){
+            const res=await request('/api/secret/edit-secret', 'PUT', {...value, _id: editItem._id}, {
+                Authorization: `Bearer ${tokenS}`
+            })
+            if(res.status===200){
+                toast.success('Secret edited')
+            }
         }else{
-            toast.error(res.message)
+            const res=await request('/api/secret/save-secret', 'POST', {...value}, {
+                Authorization: `Bearer ${tokenS}`
+            })
+            if(res.status===201){
+                toast.success('Secret created')
+            }
         }
+
+
         newSecretToggle()
         await getSecrets()
 
@@ -112,15 +135,18 @@ const Secrets = () => {
 
         let newValue={
             category: values.category,
-            date: Date.now(),
-            lastEdited: Date.now(),
             content: {}
+        }
+        if(editItem._id){
+            newValue.date=editItem.date
+        }else{
+            newValue.date=Date.now()
         }
 
         switch (values.category){
             case "loveSecret":{
                 newValue.content.boy=values.boy
-                newValue.content.girl=values.boy
+                newValue.content.girl=values.girl
                 newValue.content.boyKnown=values.boyKnown
                 newValue.content.girlKnown=values.girlKnown
                 break
@@ -146,11 +172,10 @@ const Secrets = () => {
                     whoKnow.map((i)=>{
                         let newTxt=''
                        for(let txt=0; txt<i.length; txt++){
-                           i=i.replace(/\n/g, ' ')
                            if(txt===0 && i[txt]!==' '){
                                newTxt+=i[txt]
                            }
-                           if(txt===i.length-1 && i[txt]!==' '){
+                           if(txt===i.length-1 && i[txt]!==' ' && txt!==0){
                                newTxt+=i[txt]
                            }
                            if(txt!==0 && txt!==i.length-1 && (i[txt]!==' ' || i[txt+1]!==' ')){
@@ -162,8 +187,6 @@ const Secrets = () => {
                     })
                     newValue.content.whoKnow=filteredArr
                 }
-
-
                 break
             }
         }
@@ -171,7 +194,7 @@ const Secrets = () => {
             newValue.content.source=values.source
         }
         if(!!values.description){
-            newValue.content.description=values.description
+            newValue.content.description=values.description.replace(/\n/g, ' ')
         }
 
 
@@ -180,51 +203,81 @@ const Secrets = () => {
         return newValue
     }
 
+    const deleteLink=async ()=>{
+        setLoading(true)
+        const res=await request('/api/secret/delete-secret', 'DELETE', {_id: deleteItem._id}, {
+            Authorization: `Bearer ${tokenS}`
+        })
+        if(res.status===200){
+            toast.error('Secret deleted')
+        }
+        await getSecrets()
+        toggleDelete()
+    }
+
     const filterChange=(e, value, data=null)=>{
-        // if(!data){
-        //     data=content
-        // }
-        // let result=[]
-        // setFilterMode(value)
-        // result=data
-        // if(value.category!=='none'){
-        //     result=filterCategory(value.category, data)
-        // }
-        // if(value.type!=='none'){
-        //     result=filterType(value.type, result)
-        // }
-        // if(value.firstNew){
-        //     result=result.sort((a,b)=>{return b.date-a.date})
-        // }else{
-        //     result=result.sort((a,b)=>{return a.date-b.date})
-        // }
-        // setContent(result)
-        // setFilterModal(false)
+        if(!data){
+            data=content
+        }
+        let result=[]
+        setFilterMode(value)
+        result=data
+        if(value.category!=='none'){
+            result=filterCategory(value.category, data)
+        }
+        if(value.firstNew){
+            result=result.sort((a,b)=>{return b.date-a.date})
+        }else{
+            result=result.sort((a,b)=>{return a.date-b.date})
+        }
+        setContent(result)
+        setFilterModal(false)
     }
     const filterCategory=(name, data)=>{
-        // let result=[]
-        // data.map((i,n)=>{
-        //     if(i.category===name){
-        //         result.push(i)
-        //     }
-        // })
-        // return  result
+        let result=[]
+        data.map((i)=>{
+            if(i.category===name){
+                result.push(i)
+            }
+        })
+        return  result
     }
-    // const filterType=(name, data)=>{
-    //     let result=[]
-    //     data.map((i, n)=>{
-    //         if(i.type===name){
-    //             result.push(i)
-    //         }
-    //     })
-    //     return  result
-    // }
+
 
     const searchResult=(name)=>{
+        let newTxt=''
+        for(let txt=0; txt<name.length; txt++){
+            if(txt===0 && name[txt]!==' '){
+                newTxt+=name[txt]
+            }
+            if(txt===name.length-1 && name[txt]!==' ' && txt!==0){
+                newTxt+=name[txt]
+            }
+            if(txt!==0 && txt!==name.length-1 && (name[txt]!==' ' || name[txt+1]!==' ')){
+                newTxt+=name[txt]
+            }
+        }
+        name=newTxt
         let filteredArray=[]
+        let reg=new RegExp(name, 'i')
         filteredArray=data.filter(a=>{
-            return a.content?.source?.toUpperCase().includes(name.toUpperCase()) || a.description.toUpperCase().includes(name.toUpperCase())
+            if(a.category==='loveSecret'){
+                return a.content.boy.search(reg)!==-1 || a.content.girl.search(reg)!==-1
+            }else if(a.category==='strangerSecret'){
+                return a.content.owner.search(reg)!==-1 || a.content.description.search(reg)!==-1 || a.content.source.search(reg)!==-1
+            }else if(a.category==='criminalSecret'){
+                return a.content.owner.search(reg)!==-1 || a.content.description.search(reg)!==-1 || a.content.source.search(reg)!==-1 ||
+                    a.content.accuser.search(reg)!==-1
+            }else if(a.category==='mySecret'){
+                if(a.content.description.search(reg)!==-1){
+                    return true
+                }
+                let check=a.content.whoKnow.toString()
+                return check.search(reg)!==-1
+            }
+
         })
+
         setContent(filteredArray)
 
     }
@@ -309,6 +362,7 @@ const Secrets = () => {
                             type='text'
                             name='source' placeholder='Enter a name of source'
                             autoComplete='off'
+                            value={editItem.content?.source}
                             validate={{
                                 required: {value: true, errorMessage: 'Please enter a name of source'},
                             }}
@@ -318,6 +372,7 @@ const Secrets = () => {
                                 rows={4}
                                 name="whoKnow"
                                 placeholder="Who know?(Example: Name1, Name2, ...) or Nobody"
+                                label='Who know:'
                                 autoComplete='off'
                                 value={editItem._id?editItem.content.whoKnow?editItem.content.whoKnow.join(', '):'Nobody':''}
                             />
@@ -329,14 +384,16 @@ const Secrets = () => {
                                 type='text'
                                 name='owner' placeholder='Enter a full name of secret owner'
                                 autoComplete='off'
+                                value={editItem.content?.owner}
                                 validate={{
                                     required: {value: true, errorMessage: 'Please enter a full name of secret owner'},
                                 }}
                             />
                             <AvField
                                 type='text'
-                                name='owner' placeholder='Enter a name of accuser'
+                                name='accuser' placeholder='Enter a name of accuser'
                                 autoComplete='off'
+                                value={editItem.content?.accuser}
                                 validate={{
                                     required: {value: true, errorMessage: 'Please enter a full name of accuser'},
                                 }}
@@ -349,14 +406,15 @@ const Secrets = () => {
                                     type='text'
                                     name='owner' placeholder='Enter a full name of secret owner'
                                     autoComplete='off'
+                                    value={editItem.content?.owner}
                                     validate={{
                                         required: {value: true, errorMessage: 'Please enter a full name of secret owner'},
                                     }}
                                 />
                                 <AvField
                                     type='checkbox'
+                                    value={editItem.content?.known}
                                     name='known' label='Does owner know that you know his(her) secret?'
-                                    value={'false'}
                                 />
                             </>
                             :''}
@@ -365,6 +423,7 @@ const Secrets = () => {
                                 type='text'
                                 name='boy' placeholder='Enter a full name of boy'
                                 autoComplete='off'
+                                value={editItem.content?.boy}
                                 validate={{
                                     required: {value: true, errorMessage: 'Please enter a full name of boy'},
                                 }}
@@ -372,20 +431,22 @@ const Secrets = () => {
                                 <AvField
                                     type='checkbox'
                                     name='boyKnown' label='Does the boy know she loves the he?'
-                                    value={'false'}
+                                    value={editItem.content?.boyKnown}
                                 />
                             <AvField
                                 type='text'
                                 name='girl' placeholder='Enter a full name of girl'
                                 autoComplete='off'
+                                value={editItem.content?.girl}
                                 validate={{
                                     required: {value: true, errorMessage: 'Please enter a full name of girl'},
                                 }}
                             />
                                 <AvField
                                     type='checkbox'
+                                    value={editItem.content?.girlKnown}
                                     name='girlKnown' label='Does the girl know he loves the she?'
-                                    value={'false'}
+
                                 />
                             </>
                             :
@@ -395,8 +456,9 @@ const Secrets = () => {
                             rows={5}
                             name="description"
                             placeholder="Description"
+                            label='Description:'
                             autoComplete='off'
-                            value={editItem?.content.description}
+                            value={editItem.content?.description}
                             validate={{
                                 required: {value: true, errorMessage: 'Please enter a description'},
                                 minLength: {value: 5, errorMessage: 'Min length 5 characters'}
@@ -415,11 +477,174 @@ const Secrets = () => {
                             type="submit"
                             disabled={loading}
                             className={`btn ${isDarkTheme?'btn-dark border-success':'btn-success'}`}
-                        >Add</button>
+                        >{editItem._id?'Edit':'Add'}</button>
                     </ModalFooter>
                 </AvForm>
             </Modal>
+            <Modal isOpen={deleteModal} toggle={toggleDelete}>
+                <ModalHeader>
+                    Delete secret
+                </ModalHeader>
+                <ModalBody>
+                    Do you want to delete this secret?(Click to card for view info of secret)
+                    <div className="col-12 content my-3">
+                        <div className="custom-card" onClick={()=>{setViewModal(deleteItem);toggleView()}}>
+                            {deleteItem._id?<div>
+                                {deleteItem?.description}
+                            </div>:''}
+                        </div>
+                    </div>
+                </ModalBody>
+                <ModalFooter className='py-2 d-flex justify-content-between'>
+                    <button className="btn btn-secondary" onClick={toggleDelete}>Cancel</button>
+                    <button className="btn btn-danger" onClick={deleteLink}>Delete</button>
+                </ModalFooter>
+            </Modal>
+            <Modal isOpen={viewModal} toggle={toggleView}>
+                <ModalHeader>Vew secret</ModalHeader>
+                <ModalBody>
+                    <AvForm >
+                            <AvField
+                                type='select'
+                                name='category'
+                                label="Category:"
+                                disabled={true}
+                                value={viewItem?.category}
+                            >
+                                <option value="loveSecret">Love secret</option>
+                                <option value="criminalSecret">Criminal secret</option>
+                                <option value="strangerSecret">Stranger secret</option>
+                                <option value="mySecret">My secret</option>
+                            </AvField>
 
+                            {viewItem.category!=='mySecret'?
+                                <AvField
+                                    type='text'
+                                    name='source' placeholder='Enter a name of source'
+                                    autoComplete='off'
+                                    value={viewItem.content?.source}
+                                    disabled={true}
+                                    validate={{
+                                        required: {value: true, errorMessage: 'Please enter a name of source'},
+                                    }}
+                                />:
+                                <AvField
+                                    type='textarea'
+                                    rows={4}
+                                    name="whoKnow"
+                                    placeholder="Who know?(Example: Name1, Name2, ...) or Nobody"
+                                    disabled={true}
+                                    label='Who know:'
+                                    autoComplete='off'
+                                    value={viewItem._id?viewItem.content.whoKnow?viewItem.content.whoKnow.join(', '):'Nobody':''}
+                                />
+
+                            }
+
+                            {viewItem.category==='criminalSecret'?<>
+                                    <AvField
+                                        type='text'
+                                        name='owner' placeholder='Enter a full name of secret owner'
+                                        autoComplete='off'
+                                        value={viewItem.content?.owner}
+                                        disabled={true}
+                                        validate={{
+                                            required: {value: true, errorMessage: 'Please enter a full name of secret owner'},
+                                        }}
+                                    />
+                                    <AvField
+                                        type='text'
+                                        name='accuser' placeholder='Enter a name of accuser'
+                                        autoComplete='off'
+                                        value={viewItem.content?.accuser}
+                                        disabled={true}
+                                        validate={{
+                                            required: {value: true, errorMessage: 'Please enter a full name of accuser'},
+                                        }}
+                                    />
+                                </>
+                                :''}
+
+                            {viewItem.category==='strangerSecret'?<>
+                                    <AvField
+                                        type='text'
+                                        name='owner' placeholder='Enter a full name of secret owner'
+                                        autoComplete='off'
+                                        value={viewItem.content?.owner}
+                                        disabled={true}
+                                        validate={{
+                                            required: {value: true, errorMessage: 'Please enter a full name of secret owner'},
+                                        }}
+                                    />
+                                    <AvField
+                                        type='checkbox'
+                                        value={viewItem.content?.known}
+                                        disabled={true}
+                                        name='known' label='Does owner know that you know his(her) secret?'
+                                    />
+                                </>
+                                :''}
+                            {viewItem.category==='loveSecret'?<>
+                                    <AvField
+                                        type='text'
+                                        name='boy' placeholder='Enter a full name of boy'
+                                        autoComplete='off'
+                                        value={viewItem.content?.boy}
+                                        disabled={true}
+                                        validate={{
+                                            required: {value: true, errorMessage: 'Please enter a full name of boy'},
+                                        }}
+                                    />
+                                    <AvField
+                                        type='checkbox'
+                                        name='boyKnown' label='Does the boy know she loves the he?'
+                                        disabled={true}
+                                        value={viewItem.content?.boyKnown}
+                                    />
+                                    <AvField
+                                        type='text'
+                                        name='girl' placeholder='Enter a full name of girl'
+                                        autoComplete='off'
+                                        value={viewItem.content?.girl}
+                                        disabled={true}
+                                        validate={{
+                                            required: {value: true, errorMessage: 'Please enter a full name of girl'},
+                                        }}
+                                    />
+                                    <AvField
+                                        type='checkbox'
+                                        value={viewItem.content?.girlKnown}
+                                        disabled={true}
+                                        name='girlKnown' label='Does the girl know he loves the she?'
+
+                                    />
+                                </>
+                                :
+
+                                <AvField
+                                    type='textarea'
+                                    rows={5}
+                                    name="description"
+                                    placeholder="Description"
+                                    label='Description:'
+                                    autoComplete='off'
+                                    value={viewItem.content?.description}
+                                    disabled={true}
+                                    validate={{
+                                        required: {value: true, errorMessage: 'Please enter a description'},
+                                        minLength: {value: 5, errorMessage: 'Min length 5 characters'}
+                                    }}
+                                />}
+                    </AvForm>
+                </ModalBody>
+                <ModalFooter className='py-2'>
+                    <button
+                        type='button'
+                        className={`btn w-100 ${isDarkTheme?'btn-dark border-info':'btn-info'}`}
+                        onClick={toggleView}
+                    >Ok</button>
+                </ModalFooter>
+            </Modal>
 
 
             <div className="container">
@@ -482,11 +707,15 @@ const Secrets = () => {
 
                                         return(
                                             <div key={i._id} className="col-lg-4 col-12 col-sm-6 my-2">
-                                                <div className="custom-card hover" >
+                                                <div className="custom-card hover" onClick={
+                                                    ()=>{setViewItem(i);toggleView()}
+                                                }>
                                                     <UncontrolledDropdown size='sm'>
+
                                                         <DropdownToggle color='transparent'
                                                                         onClick={(event)=>{event.stopPropagation()}}
                                                                         className={`ml-auto d-block`}>
+
                                                             <img
                                                                 src={`/icons/three-points-icon-${nameTheme}.png`}
                                                                 alt=""/>
@@ -508,21 +737,88 @@ const Secrets = () => {
                                                                 size='sm'
                                                                 className={`text-info w-100`}
                                                                 onClick={(event)=>{
-                                                                    // setViewLink(i);
-                                                                    // toggleView();
+                                                                    setViewItem(i);
+                                                                    toggleView();
                                                                     event.stopPropagation()}}
                                                             >View</DropdownItem>
                                                             <DropdownItem
                                                                 size='sm'
                                                                 className={`text-danger w-100`}
                                                                 onClick={(event)=>{
-                                                                    // setDeleteItem(i);
-                                                                    // toggleDelete();
+                                                                    setDeleteItem(i);
+                                                                    toggleDelete();
                                                                     event.stopPropagation()}}
                                                             >Delete</DropdownItem>
                                                         </DropdownMenu>
                                                     </UncontrolledDropdown>
-                                                    {i.content?.description}
+                                                    <div className="body-link">
+                                                        <h4 style={{fontSize: '1rem'}}>
+                                                            {(()=>{
+                                                                switch (i.category){
+                                                                    case'loveSecret':{
+                                                                        return 'Love secret'
+                                                                    }
+                                                                    case'strangerSecret': {
+                                                                        return 'Stranger secret'
+                                                                    }
+                                                                    case'mySecret': {
+                                                                        return 'My secret'
+                                                                    }
+                                                                    case'criminalSecret': {
+                                                                        return 'Criminal secret'
+                                                                    }
+                                                                }
+                                                            })()}
+
+                                                        </h4>
+
+                                                        {i.category!=='loveSecret'?<p className='my-1'>{i.content?.description}</p>:''}
+                                                        {
+                                                            (()=>{
+                                                                switch (i.category){
+                                                                    case'loveSecret':{
+                                                                        return <div>
+                                                                            {i.content.boy} <b style={{color: 'red'}}>&hearts;</b> {i.content.girl}
+                                                                        </div>
+                                                                    }
+                                                                    case 'strangerSecret': {
+                                                                        return <div>
+                                                                            <b>Owner: </b><b style={{
+                                                                                fontWeight: 'normal',
+                                                                            color: i.content.known?'var(--success)':'var(--danger)'
+                                                                            }}>{i.content.owner}</b>
+                                                                            <br/>
+                                                                            <b>Source: </b><b style={{
+                                                                            fontWeight: 'normal',
+                                                                            color: 'var(--info)'
+                                                                        }}>{i.content.source}</b>
+
+                                                                        </div>
+                                                                    }
+                                                                    case'criminalSecret': {
+                                                                        return <div>
+                                                                            <b>Owner: </b><b style={{
+                                                                            fontWeight: 'normal',
+                                                                            color: 'var(--warning)'
+                                                                        }}>{i.content.owner}</b>
+                                                                            <br/>
+                                                                            <b>Source: </b><b style={{
+                                                                            fontWeight: 'normal',
+                                                                            color: 'var(--info)'
+                                                                        }}>{i.content.source}</b>
+                                                                            <br/>
+                                                                            <b>Accuser: </b><b style={{
+                                                                            fontWeight: 'normal',
+                                                                            color: 'var(--danger)'
+                                                                        }}>{i.content.accuser}</b>
+                                                                        </div>
+                                                                    }
+                                                                }
+                                                            })()
+                                                        }
+
+                                                    </div>
+
                                                 </div>
 
                                             </div>

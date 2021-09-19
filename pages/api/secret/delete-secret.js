@@ -11,7 +11,7 @@ const deleteLink=async (req, res)=>{
             }
 
             const token=req.headers.authorization.split(' ')[1];
-            const {id} = req.body;
+            const {_id} = req.body;
 
             try{
                 await jwt.verify(token, process.env.jwtSecret)
@@ -23,16 +23,9 @@ const deleteLink=async (req, res)=>{
 
 
 
-            const deletedLink = await Secret.findOneAndDelete({
-                _id: id
-            });
-
-            if (!deletedLink) {
-                return res.status(400).json({
-                    message: "Not find link with this id",
-                    status: 400
-                });
-            }
+            await Secret.findOneAndDelete({
+                _id
+            })
 
 
             res.status(200).json({
