@@ -72,7 +72,6 @@ const Secrets = () => {
         }catch (e) {
             return setLoading(false)
         }
-        setTokenS(tokenS)
         await getSecrets()
         setTokenS(tokenSecret)
         // const items=document.querySelectorAll('.secret-item')
