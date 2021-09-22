@@ -73,6 +73,7 @@ const Secrets = () => {
         }catch (e) {
             return setLoading(false)
         }
+        setTokenS(tokenS)
         await getSecrets()
 
 
