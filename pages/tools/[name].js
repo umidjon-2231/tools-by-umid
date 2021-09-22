@@ -47,12 +47,6 @@ const Name = () => {
         }
     }
     return <Custom404/>
-
-
-
-
-
-
 };
 
 export default Name;

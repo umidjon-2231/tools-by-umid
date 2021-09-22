@@ -66,14 +66,18 @@ const Secrets = () => {
 
     useEffect(async ()=>{
 
-        const tokenS=JSON.parse(sessionStorage.getItem('secret'))
-        setTokenS(tokenS)
+        const tokenSecret=await JSON.parse(sessionStorage.getItem('secret'))
         try {
-            await jwt.verify(tokenS, process.env.jwtSecret)
+            await jwt.verify(tokenSecret, process.env.jwtSecret)
         }catch (e) {
             return setLoading(false)
         }
         await getSecrets()
+        setTokenS(tokenSecret)
+        // const items=document.querySelectorAll('.secret-item')
+        // for(const item of items){
+        //     console.log(item.clientHeight)
+        // }
 
 
     },[])
@@ -88,6 +92,7 @@ const Secrets = () => {
         }catch (e) {setLoading(false);return}
         await sessionStorage.setItem('secret', JSON.stringify( data.token))
         await getSecrets()
+        setTokenS(data.token)
 
 
         await toggle()
@@ -147,8 +152,8 @@ const Secrets = () => {
             case "loveSecret":{
                 newValue.content.boy=values.boy
                 newValue.content.girl=values.girl
-                newValue.content.boyKnown=values.boyKnown
-                newValue.content.girlKnown=values.girlKnown
+                newValue.content.boyLove=values.boyLove
+                newValue.content.girlLove=values.girlLove
                 break
             }
             case "criminalSecret":{
@@ -170,19 +175,8 @@ const Secrets = () => {
 
                     let filteredArr=[]
                     whoKnow.map((i)=>{
-                        let newTxt=''
-                       for(let txt=0; txt<i.length; txt++){
-                           if(txt===0 && i[txt]!==' '){
-                               newTxt+=i[txt]
-                           }
-                           if(txt===i.length-1 && i[txt]!==' ' && txt!==0){
-                               newTxt+=i[txt]
-                           }
-                           if(txt!==0 && txt!==i.length-1 && (i[txt]!==' ' || i[txt+1]!==' ')){
-                               newTxt+=i[txt]
-                           }
-                       }
-                       filteredArr.push(newTxt)
+
+                       filteredArr.push(filterSpaceOfString(i))
 
                     })
                     newValue.content.whoKnow=filteredArr
@@ -223,7 +217,13 @@ const Secrets = () => {
         setFilterMode(value)
         result=data
         if(value.category!=='none'){
-            result=filterCategory(value.category, data)
+            let resultFilter=[]
+            data.map((i)=>{
+                if(i.category===name){
+                    resultFilter.push(i)
+                }
+            })
+            result=resultFilter
         }
         if(value.firstNew){
             result=result.sort((a,b)=>{return b.date-a.date})
@@ -233,31 +233,9 @@ const Secrets = () => {
         setContent(result)
         setFilterModal(false)
     }
-    const filterCategory=(name, data)=>{
-        let result=[]
-        data.map((i)=>{
-            if(i.category===name){
-                result.push(i)
-            }
-        })
-        return  result
-    }
-
 
     const searchResult=(name)=>{
-        let newTxt=''
-        for(let txt=0; txt<name.length; txt++){
-            if(txt===0 && name[txt]!==' '){
-                newTxt+=name[txt]
-            }
-            if(txt===name.length-1 && name[txt]!==' ' && txt!==0){
-                newTxt+=name[txt]
-            }
-            if(txt!==0 && txt!==name.length-1 && (name[txt]!==' ' || name[txt+1]!==' ')){
-                newTxt+=name[txt]
-            }
-        }
-        name=newTxt
+        name=filterSpaceOfString(name)
         let filteredArray=[]
         let reg=new RegExp(name, 'i')
         filteredArray=data.filter(a=>{
@@ -280,6 +258,22 @@ const Secrets = () => {
 
         setContent(filteredArray)
 
+    }
+
+    const filterSpaceOfString=(text)=>{
+        let newTxt=''
+        for(let txt=0; txt<text.length; txt++){
+            if(txt===0 && text[txt]!==' '){
+                newTxt+=text[txt]
+            }
+            if(txt===text.length-1 && text[txt]!==' ' && txt!==0){
+                newTxt+=text[txt]
+            }
+            if(txt!==0 && txt!==text.length-1 && (text[txt]!==' ' || text[txt+1]!==' ')){
+                newTxt+=text[txt]
+            }
+        }
+        return newTxt
     }
 
     return (
@@ -430,8 +424,8 @@ const Secrets = () => {
                             />
                                 <AvField
                                     type='checkbox'
-                                    name='boyKnown' label='Does the boy know she loves the he?'
-                                    value={editItem.content?.boyKnown}
+                                    name='boyLove' label='Does the boy loves she?'
+                                    value={editItem.content?.boyLove}
                                 />
                             <AvField
                                 type='text'
@@ -444,8 +438,8 @@ const Secrets = () => {
                             />
                                 <AvField
                                     type='checkbox'
-                                    value={editItem.content?.girlKnown}
-                                    name='girlKnown' label='Does the girl know he loves the she?'
+                                    value={editItem.content?.girlLove}
+                                    name='girlLove' label='Does the girl loves he?'
 
                                 />
                             </>
@@ -489,9 +483,48 @@ const Secrets = () => {
                     Do you want to delete this secret?(Click to card for view info of secret)
                     <div className="col-12 content my-3">
                         <div className="custom-card" onClick={()=>{setViewModal(deleteItem);toggleView()}}>
-                            {deleteItem._id?<div>
-                                {deleteItem?.description}
-                            </div>:''}
+                            {deleteItem.category!=='loveSecret'?<p className='my-1'>{deleteItem.content?.description}</p>:''}
+                            {(()=>{
+                                switch (deleteItem.category){
+                                    case 'loveSecret' :{
+                                        return <div>
+                                            {deleteItem.content.boy} <b style={{color: 'red'}}>&hearts;</b> {deleteItem.content.girl}
+                                        </div>
+                                    }
+                                    case 'strangerSecret': {
+                                        return <div>
+                                            <b>Owner: </b><b style={{
+                                            fontWeight: 'normal',
+                                            color: deleteItem.content.known?'var(--success)':'var(--danger)'
+                                        }}>{deleteItem.content.owner}</b>
+                                            <br/>
+                                            <b>Source: </b><b style={{
+                                            fontWeight: 'normal',
+                                            color: 'var(--info)'
+                                        }}>{deleteItem.content.source}</b>
+
+                                        </div>
+                                    }
+                                    case 'criminalSecret': {
+                                        return <div>
+                                            <b>Owner: </b><b style={{
+                                            fontWeight: 'normal',
+                                            color: 'var(--warning)'
+                                        }}>{deleteItem.content.owner}</b>
+                                            <br/>
+                                            <b>Source: </b><b style={{
+                                            fontWeight: 'normal',
+                                            color: 'var(--info)'
+                                        }}>{deleteItem.content.source}</b>
+                                            <br/>
+                                            <b>Accuser: </b><b style={{
+                                            fontWeight: 'normal',
+                                            color: 'var(--danger)'
+                                        }}>{deleteItem.content.accuser}</b>
+                                        </div>
+                                    }
+                                }
+                            })()}
                         </div>
                     </div>
                 </ModalBody>
@@ -500,7 +533,7 @@ const Secrets = () => {
                     <button className="btn btn-danger" onClick={deleteLink}>Delete</button>
                 </ModalFooter>
             </Modal>
-            <Modal isOpen={viewModal} toggle={toggleView}>
+            <Modal isOpen={viewModal} toggle={toggleView}   >
                 <ModalHeader>Vew secret</ModalHeader>
                 <ModalBody>
                     <AvForm >
@@ -523,6 +556,7 @@ const Secrets = () => {
                                     name='source' placeholder='Enter a name of source'
                                     autoComplete='off'
                                     value={viewItem.content?.source}
+                                    label={'Source: '}
                                     disabled={true}
                                     validate={{
                                         required: {value: true, errorMessage: 'Please enter a name of source'},
@@ -547,6 +581,7 @@ const Secrets = () => {
                                         name='owner' placeholder='Enter a full name of secret owner'
                                         autoComplete='off'
                                         value={viewItem.content?.owner}
+                                        label={'Owner: '}
                                         disabled={true}
                                         validate={{
                                             required: {value: true, errorMessage: 'Please enter a full name of secret owner'},
@@ -557,6 +592,7 @@ const Secrets = () => {
                                         name='accuser' placeholder='Enter a name of accuser'
                                         autoComplete='off'
                                         value={viewItem.content?.accuser}
+                                        label={'Accuser:'}
                                         disabled={true}
                                         validate={{
                                             required: {value: true, errorMessage: 'Please enter a full name of accuser'},
@@ -571,6 +607,7 @@ const Secrets = () => {
                                         name='owner' placeholder='Enter a full name of secret owner'
                                         autoComplete='off'
                                         value={viewItem.content?.owner}
+                                        label={'Owner: '}
                                         disabled={true}
                                         validate={{
                                             required: {value: true, errorMessage: 'Please enter a full name of secret owner'},
@@ -590,6 +627,7 @@ const Secrets = () => {
                                         name='boy' placeholder='Enter a full name of boy'
                                         autoComplete='off'
                                         value={viewItem.content?.boy}
+                                        label={'Name of boy: '}
                                         disabled={true}
                                         validate={{
                                             required: {value: true, errorMessage: 'Please enter a full name of boy'},
@@ -597,15 +635,16 @@ const Secrets = () => {
                                     />
                                     <AvField
                                         type='checkbox'
-                                        name='boyKnown' label='Does the boy know she loves the he?'
+                                        name='boyLove' label='Does the boy loves she?'
                                         disabled={true}
-                                        value={viewItem.content?.boyKnown}
+                                        value={viewItem.content?.boyLove}
                                     />
                                     <AvField
                                         type='text'
                                         name='girl' placeholder='Enter a full name of girl'
                                         autoComplete='off'
                                         value={viewItem.content?.girl}
+                                        label='Name of girl:'
                                         disabled={true}
                                         validate={{
                                             required: {value: true, errorMessage: 'Please enter a full name of girl'},
@@ -613,9 +652,9 @@ const Secrets = () => {
                                     />
                                     <AvField
                                         type='checkbox'
-                                        value={viewItem.content?.girlKnown}
+                                        value={viewItem.content?.girlLove}
                                         disabled={true}
-                                        name='girlKnown' label='Does the girl know he loves the she?'
+                                        name='girlLove' label='Does the girl loves he?'
 
                                     />
                                 </>
@@ -661,7 +700,7 @@ const Secrets = () => {
 
                     </div>:
                     <div>
-                        <div className="row align-items-center" style={{paddingLeft: 10, paddingRight: 10}}>
+                        <div className="row  align-items-center" style={{paddingLeft: 10, paddingRight: 10}}>
 
                             <div className="col-lg-8 col-sm-6 col-12">
                                 <div className="col-lg-6 col-12 input-group px-0">
@@ -692,7 +731,7 @@ const Secrets = () => {
                                     type='button'
                                     onClick={newSecretToggle}
 
-                                >Add link</button>
+                                >Add secret</button>
 
                             </div>
 
@@ -700,130 +739,128 @@ const Secrets = () => {
 
                         </div>
                         <div className="content link border-top border-primary mt-3">
-                            <div className="row ">
+                            <div className="row" style={{display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start'}}>
 
                                 {content.length!==0?content.map((i,n)=>{
 
+                                    return(
+                                        <div key={i._id} className="col-lg-4 col-12 col-sm-6 my-2 secret-item">
+                                            <div className="custom-card hover" onClick={
+                                                ()=>{setViewItem(i);toggleView()}
+                                            }>
+                                                <UncontrolledDropdown size='sm'>
 
-                                        return(
-                                            <div key={i._id} className="col-lg-4 col-12 col-sm-6 my-2">
-                                                <div className="custom-card hover" onClick={
-                                                    ()=>{setViewItem(i);toggleView()}
-                                                }>
-                                                    <UncontrolledDropdown size='sm'>
+                                                    <DropdownToggle color='transparent'
+                                                                    onClick={(event)=>{event.stopPropagation()}}
+                                                                    className={`ml-auto d-block`}>
 
-                                                        <DropdownToggle color='transparent'
-                                                                        onClick={(event)=>{event.stopPropagation()}}
-                                                                        className={`ml-auto d-block`}>
+                                                        <img
+                                                            src={`/icons/three-points-icon-${nameTheme}.png`}
+                                                            alt=""/>
+                                                    </DropdownToggle>
+                                                    <DropdownMenu
+                                                        size='sm'
+                                                        className={`${isDarkTheme?'bg-dark':'bg-light'} border-primary `}>
 
-                                                            <img
-                                                                src={`/icons/three-points-icon-${nameTheme}.png`}
-                                                                alt=""/>
-                                                        </DropdownToggle>
-                                                        <DropdownMenu
+                                                        <DropdownItem
                                                             size='sm'
-                                                            className={`${isDarkTheme?'bg-dark':'bg-light'} border-primary `}>
-
-                                                            <DropdownItem
-                                                                size='sm'
-                                                                className={`text-primary w-100`}
-                                                                onClick={(event)=>{
-                                                                    setEditItem(i);
-                                                                    setSecretMode(i.category)
-                                                                    newSecretToggle();
-                                                                    event.stopPropagation()}}
-                                                            >Edit</DropdownItem>
-                                                            <DropdownItem
-                                                                size='sm'
-                                                                className={`text-info w-100`}
-                                                                onClick={(event)=>{
-                                                                    setViewItem(i);
-                                                                    toggleView();
-                                                                    event.stopPropagation()}}
-                                                            >View</DropdownItem>
-                                                            <DropdownItem
-                                                                size='sm'
-                                                                className={`text-danger w-100`}
-                                                                onClick={(event)=>{
-                                                                    setDeleteItem(i);
-                                                                    toggleDelete();
-                                                                    event.stopPropagation()}}
-                                                            >Delete</DropdownItem>
-                                                        </DropdownMenu>
-                                                    </UncontrolledDropdown>
-                                                    <div className="body-link">
-                                                        <h4 style={{fontSize: '1rem'}}>
-                                                            {(()=>{
-                                                                switch (i.category){
-                                                                    case'loveSecret':{
-                                                                        return 'Love secret'
-                                                                    }
-                                                                    case'strangerSecret': {
-                                                                        return 'Stranger secret'
-                                                                    }
-                                                                    case'mySecret': {
-                                                                        return 'My secret'
-                                                                    }
-                                                                    case'criminalSecret': {
-                                                                        return 'Criminal secret'
-                                                                    }
+                                                            className={`text-primary w-100`}
+                                                            onClick={(event)=>{
+                                                                setEditItem(i);
+                                                                setSecretMode(i.category)
+                                                                newSecretToggle();
+                                                                event.stopPropagation()}}
+                                                        >Edit</DropdownItem>
+                                                        <DropdownItem
+                                                            size='sm'
+                                                            className={`text-info w-100`}
+                                                            onClick={(event)=>{
+                                                                setViewItem(i);
+                                                                toggleView();
+                                                                event.stopPropagation()}}
+                                                        >View</DropdownItem>
+                                                        <DropdownItem
+                                                            size='sm'
+                                                            className={`text-danger w-100`}
+                                                            onClick={(event)=>{
+                                                                setDeleteItem(i);
+                                                                toggleDelete();
+                                                                event.stopPropagation()}}
+                                                        >Delete</DropdownItem>
+                                                    </DropdownMenu>
+                                                </UncontrolledDropdown>
+                                                <div className="body-link">
+                                                    <h4 style={{fontSize: '1rem'}}>
+                                                        {(()=>{
+                                                            switch (i.category){
+                                                                case'loveSecret':{
+                                                                    return 'Love secret'
                                                                 }
-                                                            })()}
+                                                                case'strangerSecret': {
+                                                                    return 'Stranger secret'
+                                                                }
+                                                                case'mySecret': {
+                                                                    return 'My secret'
+                                                                }
+                                                                case'criminalSecret': {
+                                                                    return 'Criminal secret'
+                                                                }
+                                                            }
+                                                        })()}
 
-                                                        </h4>
+                                                    </h4>
 
-                                                        {i.category!=='loveSecret'?<p className='my-1'>{i.content?.description}</p>:''}
-                                                        {
-                                                            (()=>{
-                                                                switch (i.category){
-                                                                    case'loveSecret':{
-                                                                        return <div>
-                                                                            {i.content.boy} <b style={{color: 'red'}}>&hearts;</b> {i.content.girl}
-                                                                        </div>
-                                                                    }
-                                                                    case 'strangerSecret': {
-                                                                        return <div>
-                                                                            <b>Owner: </b><b style={{
-                                                                                fontWeight: 'normal',
-                                                                            color: i.content.known?'var(--success)':'var(--danger)'
-                                                                            }}>{i.content.owner}</b>
-                                                                            <br/>
-                                                                            <b>Source: </b><b style={{
+                                                    {i.category!=='loveSecret'?<p className='my-1'>{i.content?.description}</p>:''}
+                                                    {
+                                                        (()=>{
+                                                            switch (i.category){
+                                                                case'loveSecret':{
+                                                                    return <div>
+                                                                        {i.content.boy} <b style={{color: 'red'}}>&hearts;</b> {i.content.girl}
+                                                                    </div>
+                                                                }
+                                                                case 'strangerSecret': {
+                                                                    return <div>
+                                                                        <b>Owner: </b><b style={{
                                                                             fontWeight: 'normal',
-                                                                            color: 'var(--info)'
-                                                                        }}>{i.content.source}</b>
-
-                                                                        </div>
-                                                                    }
-                                                                    case'criminalSecret': {
-                                                                        return <div>
-                                                                            <b>Owner: </b><b style={{
-                                                                            fontWeight: 'normal',
-                                                                            color: 'var(--warning)'
+                                                                        color: i.content.known?'var(--success)':'var(--danger)'
                                                                         }}>{i.content.owner}</b>
-                                                                            <br/>
-                                                                            <b>Source: </b><b style={{
-                                                                            fontWeight: 'normal',
-                                                                            color: 'var(--info)'
-                                                                        }}>{i.content.source}</b>
-                                                                            <br/>
-                                                                            <b>Accuser: </b><b style={{
-                                                                            fontWeight: 'normal',
-                                                                            color: 'var(--danger)'
-                                                                        }}>{i.content.accuser}</b>
-                                                                        </div>
-                                                                    }
-                                                                }
-                                                            })()
-                                                        }
+                                                                        <br/>
+                                                                        <b>Source: </b><b style={{
+                                                                        fontWeight: 'normal',
+                                                                        color: 'var(--info)'
+                                                                    }}>{i.content.source}</b>
 
-                                                    </div>
+                                                                    </div>
+                                                                }
+                                                                case'criminalSecret': {
+                                                                    return <div>
+                                                                        <b>Owner: </b><b style={{
+                                                                        fontWeight: 'normal',
+                                                                        color: 'var(--warning)'
+                                                                    }}>{i.content.owner}</b>
+                                                                        <br/>
+                                                                        <b>Source: </b><b style={{
+                                                                        fontWeight: 'normal',
+                                                                        color: 'var(--info)'
+                                                                    }}>{i.content.source}</b>
+                                                                        <br/>
+                                                                        <b>Accuser: </b><b style={{
+                                                                        fontWeight: 'normal',
+                                                                        color: 'var(--danger)'
+                                                                    }}>{i.content.accuser}</b>
+                                                                    </div>
+                                                                }
+                                                            }
+                                                        })()
+                                                    }
 
                                                 </div>
 
                                             </div>
 
-                                        )
+                                        </div>
+                                    )
                                     }):
                                     <div className="col-12 text-center">
                                         <img src={`/icons/not-data-yet-${nameTheme}.png`} width={50} alt=""/>

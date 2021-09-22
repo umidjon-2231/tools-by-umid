@@ -33,10 +33,6 @@ const Settings = () => {
 
         </Navbar>
     );
-
-
-
-
 };
 
 export default Settings;
