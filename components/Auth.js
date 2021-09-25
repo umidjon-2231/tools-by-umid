@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react"
-import {AvForm, AvInput} from "availity-reactstrap-validation"
+import {AvForm, AvField} from "availity-reactstrap-validation"
 import {useHttp} from "../hooks/https.hook"
 import {useAuth} from "../hooks/auth.hook"
 import Loader from "../components/Loader"
@@ -20,16 +20,21 @@ export default function Auth() {
     useEffect(()=>{
 
 
+
     }, [])
 
 
     const loginHandler=async (events, value)=>{
+        if(value.password===''){
+            toast.error('Please enter a password')
+            return
+        }
         setLoading(true)
-        const password=value.password
+        const {password}=value
         try {
             const data=await request('/api/auth/login', 'POST', {password})
             if(data.status!==200){
-                toast.error(error)
+                window.navigator.vibrate(290)
                 setLoading(false)
                 return;
             }
@@ -55,14 +60,12 @@ export default function Auth() {
                     <div className="card">
                         <AvForm onValidSubmit={loginHandler}>
                             <div className="card-body">
-                                <AvInput type='text' name='login' value='admin' className='d-none'/>
-                                <AvInput
+                                <AvField type='text' name='login' value='admin' className='d-none'/>
+                                <AvField
                                     type="password"
                                     name="password"
                                     placeholder="Password"
-                                    validate={{
-                                        required: {value: true, errorMessage: 'Please enter password'}
-                                    }}
+
                                 />
                             </div>
                             <div className="card-footer py-2 d-flex justify-content-between">

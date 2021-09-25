@@ -74,12 +74,6 @@ const Secrets = () => {
         }
         await getSecrets()
         setTokenS(tokenSecret)
-        // const items=document.querySelectorAll('.secret-item')
-        // for(const item of items){
-        //     console.log(item.clientHeight)
-        // }
-
-
     },[])
 
     const checkPassword=async (event, values)=>{
@@ -89,7 +83,7 @@ const Secrets = () => {
         })
         try{
             await jwt.verify(data.token, process.env.jwtSecret)
-        }catch (e) {setLoading(false);return}
+        }catch (e) {setLoading(false);window.navigator.vibrate(290);return}
         await sessionStorage.setItem('secret', JSON.stringify( data.token))
         await getSecrets()
         setTokenS(data.token)
@@ -203,7 +197,7 @@ const Secrets = () => {
             Authorization: `Bearer ${tokenS}`
         })
         if(res.status===200){
-            toast.error('Secret deleted')
+            toast.warn('Secret deleted')
         }
         await getSecrets()
         toggleDelete()
@@ -790,7 +784,9 @@ const Secrets = () => {
                                                     </DropdownMenu>
                                                 </UncontrolledDropdown>
                                                 <div className="body-link">
-                                                    <h4 style={{fontSize: '1rem'}}>
+                                                    <h4 style={{fontSize: '1rem',
+                                                        textShadow: `0 0 10px ${isDarkTheme?'#fff':'#000'}, 0 0 5px ${isDarkTheme?'#fff':'#000'}`
+                                                    }}>
                                                         {(()=>{
                                                             switch (i.category){
                                                                 case'loveSecret':{
@@ -810,13 +806,17 @@ const Secrets = () => {
 
                                                     </h4>
 
-                                                    {i.category!=='loveSecret'?<p className='my-1'>{i.content?.description}</p>:''}
+                                                    {i.category!=='loveSecret'?<p className='my-1 text-info'>{i.content?.description}</p>:''}
                                                     {
                                                         (()=>{
                                                             switch (i.category){
                                                                 case'loveSecret':{
                                                                     return <div>
-                                                                        {i.content.boy} <b style={{color: 'red'}}>&hearts;</b> {i.content.girl}
+                                                                        <b style={{color: `${i.content.boyLove?'var(--danger)':'var(--warning)'}`}}>{i.content.boy}</b>
+                                                                        &nbsp;
+                                                                        <b style={{color: 'red'}}>&hearts;</b>
+                                                                        &nbsp;
+                                                                        <b style={{color: `${i.content.girlLove?'var(--danger)':'var(--warning)'}`}}>{i.content.girl}</b>
                                                                     </div>
                                                                 }
                                                                 case 'strangerSecret': {
