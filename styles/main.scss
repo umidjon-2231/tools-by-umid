@@ -72,13 +72,13 @@ body{
   padding: 10px 20px 10px 20px;
   cursor: pointer;
   transition: all linear 0.5s;
-  p{
-    white-space: nowrap;
-    overflow: hidden;
-    width: 100%;
-    text-overflow: ellipsis;
-    height: 2rem;
-  }
+  //p{
+  //  white-space: nowrap;
+  //  overflow: hidden;
+  //  width: 100%;
+  //  text-overflow: ellipsis;
+  //  height: 2rem;
+  //}
 
 
   .body{
@@ -94,7 +94,7 @@ body{
     width: 100%;
     //overflow: hidden;
 
-    h5{
+    h5, .infinity-text{
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;

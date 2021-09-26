@@ -1,6 +1,8 @@
 const Secret=require('../../../models/secret')
 import connectDB from "../../../middleware/mongodb"
 const jwt=require('jsonwebtoken')
+const bcrypt=require('bcryptjs')
+const crypto=require('crypto-js')
 
 
 const saveLink=async (req, res)=>{
@@ -19,13 +21,14 @@ const saveLink=async (req, res)=>{
             const {
                 content,
                 category,
-                date, lastEdited
             } = req.body;
+            const hashedContent=crypto.AES.encrypt(JSON.stringify(content), process.env.jwtSecret).toString()
+
 
 
 
             const secret = new Secret({
-                content,
+                content: hashedContent,
                 category,
                 date: Date.now(),
                 lastEdited: Date.now()

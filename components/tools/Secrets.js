@@ -10,6 +10,7 @@ import {useHttp} from "../../hooks/https.hook"
 import Loader from "../Loader"
 import {toast} from "react-toastify"
 import Title from "../Title";
+import crypto from "crypto-js";
 
 const Secrets = () => {
     const [data, setData]=useState([])
@@ -36,6 +37,8 @@ const Secrets = () => {
     const {token}=useAuth()
     const {request}=useHttp()
     const jwt=require('jsonwebtoken')
+    const crypto=require('crypto-js')
+
 
     const {isDarkTheme, nameTheme}=useThemeDetector()
 
@@ -99,8 +102,16 @@ const Secrets = () => {
         const res=await request('/api/secret/get-secret', 'GET', null, {
             Authorization: `Bearer ${tokenS}`
         })
-        await setContent(res.data)
-        await setData(res.data)
+        let comparedData=[]
+        res.data?.map( async i=>{
+            let newItem={}
+            const bytes  = crypto.AES.decrypt(i.content, process.env.jwtSecret);
+            const decryptedData = JSON.parse(bytes.toString(crypto.enc.Utf8));
+            newItem={...i, content: {...decryptedData}}
+            comparedData.push(newItem)
+        })
+        await setContent(comparedData)
+        await setData(comparedData)
         setLoading(false)
     }
 
@@ -351,6 +362,7 @@ const Secrets = () => {
                             name='source' placeholder='Enter a name of source'
                             autoComplete='off'
                             value={editItem.content?.source}
+                            maxLength={50}
                             validate={{
                                 required: {value: true, errorMessage: 'Please enter a name of source'},
                             }}
@@ -371,6 +383,7 @@ const Secrets = () => {
                             <AvField
                                 type='text'
                                 name='owner' placeholder='Enter a full name of secret owner'
+                                maxLength={50}
                                 autoComplete='off'
                                 value={editItem.content?.owner}
                                 validate={{
@@ -380,6 +393,7 @@ const Secrets = () => {
                             <AvField
                                 type='text'
                                 name='accuser' placeholder='Enter a name of accuser'
+                                maxLength={50}
                                 autoComplete='off'
                                 value={editItem.content?.accuser}
                                 validate={{
@@ -393,6 +407,7 @@ const Secrets = () => {
                                 <AvField
                                     type='text'
                                     name='owner' placeholder='Enter a full name of secret owner'
+                                    maxLength={50}
                                     autoComplete='off'
                                     value={editItem.content?.owner}
                                     validate={{
@@ -411,6 +426,7 @@ const Secrets = () => {
                                 type='text'
                                 name='boy' placeholder='Enter a full name of boy'
                                 autoComplete='off'
+                                maxLength={50}
                                 value={editItem.content?.boy}
                                 validate={{
                                     required: {value: true, errorMessage: 'Please enter a full name of boy'},
@@ -424,6 +440,7 @@ const Secrets = () => {
                             <AvField
                                 type='text'
                                 name='girl' placeholder='Enter a full name of girl'
+                                maxLength={50}
                                 autoComplete='off'
                                 value={editItem.content?.girl}
                                 validate={{
@@ -476,13 +493,13 @@ const Secrets = () => {
                 <ModalBody>
                     Do you want to delete this secret?(Click to card for view info of secret)
                     <div className="col-12 content my-3">
-                        <div className="custom-card" onClick={()=>{setViewModal(deleteItem);toggleView()}}>
+                        <div className="custom-card " onClick={()=>{setViewModal(deleteItem);toggleView()}}>
                             {deleteItem.category!=='loveSecret'?<p className='my-1'>{deleteItem.content?.description}</p>:''}
                             {(()=>{
                                 switch (deleteItem.category){
                                     case 'loveSecret' :{
-                                        return <div>
-                                            {deleteItem.content.boy} <b style={{color: 'red'}}>&hearts;</b> {deleteItem.content.girl}
+                                        return <div style={{width: '100%'}}>
+                                                {deleteItem.content.boy} <b style={{color: 'red'}}>&hearts;</b> {deleteItem.content.girl}
                                         </div>
                                     }
                                     case 'strangerSecret': {
@@ -546,7 +563,8 @@ const Secrets = () => {
 
                             {viewItem.category!=='mySecret'?
                                 <AvField
-                                    type='text'
+                                    type='textarea'
+                                    rows={1}
                                     name='source' placeholder='Enter a name of source'
                                     autoComplete='off'
                                     value={viewItem.content?.source}
@@ -571,7 +589,8 @@ const Secrets = () => {
 
                             {viewItem.category==='criminalSecret'?<>
                                     <AvField
-                                        type='text'
+                                        type='textarea'
+                                        rows={1}
                                         name='owner' placeholder='Enter a full name of secret owner'
                                         autoComplete='off'
                                         value={viewItem.content?.owner}
@@ -582,7 +601,8 @@ const Secrets = () => {
                                         }}
                                     />
                                     <AvField
-                                        type='text'
+                                        type='textarea'
+                                        rows={1}
                                         name='accuser' placeholder='Enter a name of accuser'
                                         autoComplete='off'
                                         value={viewItem.content?.accuser}
@@ -597,7 +617,8 @@ const Secrets = () => {
 
                             {viewItem.category==='strangerSecret'?<>
                                     <AvField
-                                        type='text'
+                                        type='textarea'
+                                        rows={1}
                                         name='owner' placeholder='Enter a full name of secret owner'
                                         autoComplete='off'
                                         value={viewItem.content?.owner}
@@ -617,7 +638,8 @@ const Secrets = () => {
                                 :''}
                             {viewItem.category==='loveSecret'?<>
                                     <AvField
-                                        type='text'
+                                        type='textarea'
+                                        rows={1}
                                         name='boy' placeholder='Enter a full name of boy'
                                         autoComplete='off'
                                         value={viewItem.content?.boy}
@@ -634,7 +656,8 @@ const Secrets = () => {
                                         value={viewItem.content?.boyLove}
                                     />
                                     <AvField
-                                        type='text'
+                                        type='textarea'
+                                        rows={1}
                                         name='girl' placeholder='Enter a full name of girl'
                                         autoComplete='off'
                                         value={viewItem.content?.girl}
@@ -806,35 +829,33 @@ const Secrets = () => {
 
                                                     </h4>
 
-                                                    {i.category!=='loveSecret'?<p className='my-1 text-info'>{i.content?.description}</p>:''}
+                                                    {i.category!=='loveSecret'?<p className='my-1 text-info infinity-text'>{i.content?.description}</p>:''}
                                                     {
                                                         (()=>{
                                                             switch (i.category){
                                                                 case'loveSecret':{
-                                                                    return <div>
-                                                                        <b style={{color: `${i.content.boyLove?'var(--danger)':'var(--warning)'}`}}>{i.content.boy}</b>
+                                                                    return <div className={'infinity-text'}>
+                                                                        <font style={{color: `${i.content.boyLove?'var(--danger)':'var(--warning)'}`}}>{i.content.boy}</font>
                                                                         &nbsp;
                                                                         <b style={{color: 'red'}}>&hearts;</b>
                                                                         &nbsp;
-                                                                        <b style={{color: `${i.content.girlLove?'var(--danger)':'var(--warning)'}`}}>{i.content.girl}</b>
+                                                                        <font style={{color: `${i.content.girlLove?'var(--danger)':'var(--warning)'}`}}>{i.content.girl}</font>
                                                                     </div>
                                                                 }
                                                                 case 'strangerSecret': {
-                                                                    return <div>
-                                                                        <b>Owner: </b><b style={{
-                                                                            fontWeight: 'normal',
+                                                                    return <div className='infinity-text'>
+                                                                        <b>Owner: </b><font style={{
                                                                         color: i.content.known?'var(--success)':'var(--danger)'
-                                                                        }}>{i.content.owner}</b>
+                                                                        }}>{i.content.owner}</font>
                                                                         <br/>
-                                                                        <b>Source: </b><b style={{
-                                                                        fontWeight: 'normal',
+                                                                        <b>Source: </b><font style={{
                                                                         color: 'var(--info)'
-                                                                    }}>{i.content.source}</b>
+                                                                    }}>{i.content.source}</font>
 
                                                                     </div>
                                                                 }
                                                                 case'criminalSecret': {
-                                                                    return <div>
+                                                                    return <div className='infinity-text'>
                                                                         <b>Owner: </b><b style={{
                                                                         fontWeight: 'normal',
                                                                         color: 'var(--warning)'

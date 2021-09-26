@@ -1,0 +1,1 @@
+export const MODAL_TOGGLE='MODAL_CHANGE'

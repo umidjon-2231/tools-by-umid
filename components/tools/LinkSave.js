@@ -18,8 +18,11 @@ import Loader from "../Loader"
 import {useAuth} from "../../hooks/auth.hook"
 import Navbar from "../Navbar"
 import Title from "../Title";
+import {useDispatch, useSelector} from "react-redux";
+import {toggleModal} from "../../redux/actions/linkSave";
 
 const LinkSave = () => {
+    const linkSaveState=useSelector((state)=>state.linkSave)
     const [modal, setModal]=useState(false)
     const [filterModal, setFilterModal]=useState(false)
     const [viewModal, setViewModal]=useState(false)
@@ -39,13 +42,14 @@ const LinkSave = () => {
     const {isDarkTheme, nameTheme}=useThemeDetector()
     const {request}=useHttp()
     const {token, takeToken}=useAuth()
+    const dispatch=useDispatch()
 
     useEffect(()=>{
+        // dispatch(toggleModal())
        getLinks()
     }, [])
 
     const toggle=()=>{
-
         setModal(!modal)
         if(modal && editItem._id){
             setEditItem({})
