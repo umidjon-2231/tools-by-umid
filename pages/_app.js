@@ -25,7 +25,6 @@ function MyApp({ Component, pageProps }) {
 
     useEffect(async ()=>{
         setLoading(false)
-        {/*    todo: security update*/}
 
     }, [Component])
 
@@ -33,9 +32,9 @@ function MyApp({ Component, pageProps }) {
 
 
 
-    if(loading){
-        return <Loader/>
-    }
+    // if(loading){
+    //     return <Loader/>
+    // }
 
 
   return (

@@ -3,7 +3,7 @@ const mongoose=require('mongoose')
 
 
 const schema=new Schema({
-    content: {type: String, required: true},
+    content: {type: Object, required: true},
     category: {type: String, required: true},
     date: {type: Number, required: true},
     lastEdited: {type: Number, required: true}

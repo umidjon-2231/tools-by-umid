@@ -17,6 +17,22 @@ export const useThemeDetector = () => {
     return {isDarkTheme, nameTheme: isDarkTheme?'dark':'light'};
 }
 
+export const filterSpaceOfString=(text)=>{
+    let newTxt=''
+    for(let txt=0; txt<text.length; txt++){
+        if(txt===0 && text[txt]!==' '){
+            newTxt+=text[txt]
+        }
+        if(txt===text.length-1 && text[txt]!==' ' && txt!==0){
+            newTxt+=text[txt]
+        }
+        if(txt!==0 && txt!==text.length-1 && (text[txt]!==' ' || text[txt+1]!==' ')){
+            newTxt+=text[txt]
+        }
+    }
+    return newTxt
+}
+
 
 export const tools=[
     {

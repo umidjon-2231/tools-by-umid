@@ -19,10 +19,10 @@ import {useAuth} from "../../hooks/auth.hook"
 import Navbar from "../Navbar"
 import Title from "../Title";
 import {useDispatch, useSelector} from "react-redux";
-import {toggleModal} from "../../redux/actions/linkSave";
+import {toggleModal} from "../../redux/actions/linkSave.action";
 
 const LinkSave = () => {
-    const linkSaveState=useSelector((state)=>state.linkSave)
+
     const [modal, setModal]=useState(false)
     const [filterModal, setFilterModal]=useState(false)
     const [viewModal, setViewModal]=useState(false)
@@ -43,6 +43,7 @@ const LinkSave = () => {
     const {request}=useHttp()
     const {token, takeToken}=useAuth()
     const dispatch=useDispatch()
+    const linkSaveState=useSelector((state)=>state.linkSave)
 
     useEffect(()=>{
         // dispatch(toggleModal())

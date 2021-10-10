@@ -1,1 +1,2 @@
 export const MODAL_TOGGLE='MODAL_CHANGE'
+export const LOADING_TOGGLE='LOADING_CHANGE'

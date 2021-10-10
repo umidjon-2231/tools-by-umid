@@ -14,10 +14,9 @@ const Name = () => {
     const router=useRouter()
     const {token}=useAuth()
     useEffect(()=>{
-
+        setLoading(false)
     }, [])
 
-    useEffect(()=>{setLoading(true);setLoading(false)}, [(router.query.name)])
 
     if(loading){
         return <Loader/>

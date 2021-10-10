@@ -5,12 +5,11 @@ import {useRouter} from "next/router"
 import Navbar from "../Navbar"
 import {AvForm, AvField} from 'availity-reactstrap-validation'
 import {DropdownItem, DropdownMenu, DropdownToggle, Modal, ModalBody, ModalFooter, ModalHeader, UncontrolledDropdown} from "reactstrap"
-import {useThemeDetector} from "../../toolsOfProject"
+import {filterSpaceOfString, useThemeDetector} from "../../toolsOfProject"
 import {useHttp} from "../../hooks/https.hook"
 import Loader from "../Loader"
 import {toast} from "react-toastify"
 import Title from "../Title";
-import crypto from "crypto-js";
 
 const Secrets = () => {
     const [data, setData]=useState([])
@@ -42,7 +41,6 @@ const Secrets = () => {
 
     const {isDarkTheme, nameTheme}=useThemeDetector()
 
-    const router=useRouter()
     const toggle=()=>{setCheckModal(!checkModal)}
     const newSecretToggle=()=>{
         setNewSecretModal(!newSecretModal)
@@ -70,6 +68,9 @@ const Secrets = () => {
     useEffect(async ()=>{
 
         const tokenSecret=await JSON.parse(sessionStorage.getItem('secret'))
+        if (!tokenSecret){
+            return setLoading(false)
+        }
         try {
             await jwt.verify(tokenSecret, process.env.jwtSecret)
         }catch (e) {
@@ -155,24 +156,24 @@ const Secrets = () => {
 
         switch (values.category){
             case "loveSecret":{
-                newValue.content.boy=values.boy
-                newValue.content.girl=values.girl
+                newValue.content.boy=filterSpaceOfString(values.boy)
+                newValue.content.girl=filterSpaceOfString(values.girl)
                 newValue.content.boyLove=values.boyLove
                 newValue.content.girlLove=values.girlLove
                 break
             }
             case "criminalSecret":{
-                newValue.content.owner=values.owner
-                newValue.content.accuser=values.accuser
+                newValue.content.owner=filterSpaceOfString(values.owner)
+                newValue.content.accuser=filterSpaceOfString(values.accuser)
                 break
             }
             case "strangerSecret":{
-                newValue.content.owner=values.owner
+                newValue.content.owner=filterSpaceOfString(values.owner)
                 newValue.content.known=values.known
                 break
             }
             case "mySecret":{
-                if(!values.whoKnow.search(/Nobody/i)){
+                if(values.whoKnow.search(/Nobody/i)!==-1){
                     newValue.content.whoKnow=null
                 }else{
                     values.whoKnow=values.whoKnow.replace(/\n/g, ' ')
@@ -180,9 +181,7 @@ const Secrets = () => {
 
                     let filteredArr=[]
                     whoKnow.map((i)=>{
-
                        filteredArr.push(filterSpaceOfString(i))
-
                     })
                     newValue.content.whoKnow=filteredArr
                 }
@@ -190,15 +189,12 @@ const Secrets = () => {
             }
         }
         if(!!values.source){
-            newValue.content.source=values.source
+            newValue.content.source=filterSpaceOfString(values.source)
         }
         if(!!values.description){
-            newValue.content.description=values.description.replace(/\n/g, ' ')
+            newValue.content.description=filterSpaceOfString(values.description.replace(/\n/g, ' '))
         }
 
-
-
-        console.log(newValue)
         return newValue
     }
 
@@ -265,21 +261,7 @@ const Secrets = () => {
 
     }
 
-    const filterSpaceOfString=(text)=>{
-        let newTxt=''
-        for(let txt=0; txt<text.length; txt++){
-            if(txt===0 && text[txt]!==' '){
-                newTxt+=text[txt]
-            }
-            if(txt===text.length-1 && text[txt]!==' ' && txt!==0){
-                newTxt+=text[txt]
-            }
-            if(txt!==0 && txt!==text.length-1 && (text[txt]!==' ' || text[txt+1]!==' ')){
-                newTxt+=text[txt]
-            }
-        }
-        return newTxt
-    }
+
 
     return (
         <Navbar name='Secrets'>
@@ -875,15 +857,12 @@ const Secrets = () => {
                                                             }
                                                         })()
                                                     }
-
                                                 </div>
-
                                             </div>
-
                                         </div>
                                     )
                                     }):
-                                    <div className="col-12 text-center">
+                                    <div className="col-12 text-center" style={{marginTop: '20vh'}}>
                                         <img src={`/icons/not-data-yet-${nameTheme}.png`} width={50} alt=""/>
                                         <p>Not data yet</p>
                                     </div>

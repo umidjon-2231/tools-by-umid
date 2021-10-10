@@ -6,7 +6,7 @@ class MyDocument extends Document {
             <Html lang="en">
                 <Head >
                     <title>Tools of Umid</title>
-                    <meta name="description" content="Web site created by Umidjon"/>
+                    <meta name="description" content="Web site created by Umidjon. Crazy tools."/>
                     <meta name="theme-color" content="#343A40"/>
                     <link rel="icon" href="/icons/main-logo-ico.ico"/>
                     <link rel="apple-touch-icon" href="/icons/main-logo-png.png"/>

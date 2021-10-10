@@ -1,4 +1,3 @@
-// import mongoose from 'mongoose';
 const mongoose=require('mongoose')
 
 const connectDB = handler => async (req, res) => {
