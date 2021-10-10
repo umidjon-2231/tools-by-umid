@@ -1,3 +1,5 @@
+import crypto from "crypto-js";
+
 const Secret=require('../../../models/secret')
 import connectDB from "../../../middleware/mongodb"
 const jwt=require('jsonwebtoken')
@@ -17,9 +19,10 @@ const editLink=async (req, res)=>{
             }catch (e) {
                 return res.status(401).json({message: e.message, status: 401})
             }
+            const hashedContent=crypto.AES.encrypt(JSON.stringify(content), process.env.jwtSecret).toString()
 
 
-            await Secret.updateOne({_id}, { category, date, lastEdited: Date.now(), content});
+            await Secret.updateOne({_id}, { category, date, lastEdited: Date.now(), content: hashedContent});
 
 
             res.status(200).json({
