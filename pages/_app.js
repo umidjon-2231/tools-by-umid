@@ -24,7 +24,7 @@ function MyApp({ Component, pageProps }) {
 
 
     useEffect(async ()=>{
-        setLoading(false)
+        // setLoading(false)
 
     }, [Component])
 
@@ -39,7 +39,7 @@ function MyApp({ Component, pageProps }) {
 
   return (
       <Provider store={store}>
-
+          {/*<Loader/>*/}
           <Component  {...pageProps} />
           <ToastContainer/>
       </Provider>

@@ -1,13 +1,15 @@
 import React from 'react';
 import {ScaleLoader} from 'react-spinners'
 import {useThemeDetector} from "../toolsOfProject"
-import {NextSeo} from "next-seo"
+import Head from "next/head";
 
 const Loader = () => {
     const {isDarkTheme}=useThemeDetector()
     return (
         <div className='loader'>
-            <NextSeo title='Loading...'/>
+            <Head>
+                <title>Loading...</title>
+            </Head>
             <ScaleLoader loading={true} color={isDarkTheme?'#f1f1f1':'#343A40'} />
         </div>
     );

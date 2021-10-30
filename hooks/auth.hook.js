@@ -1,6 +1,7 @@
 import {useState, useCallback, useEffect} from 'react'
 import {useRouter} from "next/router"
 import {toast} from "react-toastify"
+import {deleteCookie, setCookie} from "../toolsOfProject";
 const jwt=require('jsonwebtoken')
 
 const storageName=process.env.storageName
@@ -15,12 +16,14 @@ export const useAuth=()=>{
     const login=useCallback((jwtToken)=>{
         setToken(jwtToken)
         localStorage.setItem(storageName, JSON.stringify({token: jwtToken}))
+        setCookie('token', jwtToken, 2)
     }, [])
 
     const logout=useCallback(()=>{
         setToken(null)
         localStorage.removeItem(storageName)
         sessionStorage.removeItem('secret')
+        deleteCookie('token')
         router.push('/')
 
 

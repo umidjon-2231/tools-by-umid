@@ -1,13 +1,15 @@
 import React from 'react';
 import Link from "next/link"
-import {NextSeo} from "next-seo"
 import {useRouter} from "next/router"
+import Head from 'next/head'
 
 const Custom404 = () => {
     const router=useRouter()
     return (
         <div>
-            <NextSeo title='404'/>
+            <Head>
+                <title>404 | Page not found</title>
+            </Head>
             <div onClick={()=>{router.push('/')}}>
                 <div className="container">
                     <div className="row">

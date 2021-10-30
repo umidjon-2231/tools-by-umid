@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {useAuth} from "../../hooks/auth.hook"
-import {NextSeo} from "next-seo"
 import {useRouter} from "next/router"
 import Navbar from "../Navbar"
 import {AvForm, AvField} from 'availity-reactstrap-validation'
@@ -715,7 +714,7 @@ const Secrets = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-lg-4 col-sm-6 col-12 mt-3 mt-sm-0 d-flex justify-content-end">
+                            <div className="col-lg-4 col-sm-6 col-12 mt-3 mt-sm-0 d-flex justify-content-between justify-content-sm-end">
 
                                 <button
                                     type={'button'}

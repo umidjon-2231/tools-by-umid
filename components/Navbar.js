@@ -12,7 +12,6 @@ const Navbar = ({name, children}) => {
             width: '36px',
             height: '30px',
             top: '56px',
-            right: '10%'
         },
         bmBurgerBars: {
             background: '#007BFF'

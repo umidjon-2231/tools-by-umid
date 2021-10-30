@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {NextSeo} from "next-seo"
 import Link from "next/link"
+import Title from "../../components/Title";
 
 const Index = () => {
     const [content, setContent]=useState([
@@ -19,9 +19,7 @@ const Index = () => {
 
     return (
         <div>
-            <NextSeo
-                title="Tools of Umid | Guest tools"
-            />
+            <Title name='Guest-tools'/>
 
 
             <div className="container homepage">

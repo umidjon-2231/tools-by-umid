@@ -1,5 +1,4 @@
 import React, {useEffect} from 'react';
-import {NextSeo} from "next-seo"
 import {useRouter} from "next/router"
 import Navbar from "../Navbar"
 import Title from "../Title";
@@ -12,7 +11,7 @@ const Decoder = () => {
 
     return (
         <Navbar name='Decoder'>
-            <Title/>
+            <Title name='Decoder'/>
             <div className="container">
 
             </div>

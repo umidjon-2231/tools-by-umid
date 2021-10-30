@@ -3,7 +3,7 @@ import {useAuth} from "../hooks/auth.hook"
 import {tools, useThemeDetector} from "../toolsOfProject"
 import Link from "next/link"
 import Loader from "./Loader"
-import {NextSeo} from "next-seo"
+import Title from "./Title";
 
 const Homepage = () => {
 
@@ -27,9 +27,8 @@ const Homepage = () => {
 
     return (
         <div>
-            <NextSeo
-             title="Tools of Umid | Homepage"
-            />
+            <Title name='Homepage'/>
+
             <div className="container homepage">
                 <h1 className="mt-5 text-center">Tools of Umid</h1>
                 <div className=" col-10 mx-auto my-4 bg-primary" style={{height: "2px"}}/>

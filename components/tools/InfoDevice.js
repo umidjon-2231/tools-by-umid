@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {NextSeo} from "next-seo"
 import {useRouter} from "next/router"
 import Loader from "../Loader"
 import {useHttp} from "../../hooks/https.hook"

@@ -6,7 +6,7 @@ import Loader from "../components/Loader"
 import {useRouter} from "next/router"
 import {toast} from "react-toastify"
 import {useThemeDetector} from "../toolsOfProject"
-import {NextSeo} from "next-seo"
+import Head from 'next/head'
 
 
 export default function Auth() {
@@ -38,7 +38,7 @@ export default function Auth() {
                 setLoading(false)
                 return;
             }
-            router.push('/tools')
+            await router.push('/tools')
             auth.login(data?.token)
 
             toast.success('Access allowed', {position: 'bottom-right'})
@@ -52,7 +52,10 @@ export default function Auth() {
     }
     return (
         <div className="container">
-            <NextSeo title='Tools of Umid'/>
+
+            <Head>
+                <title>Tools of Umid</title>
+            </Head>
             <h1 className="mt-5 text-center">Tools of Umid</h1>
             <div className=" col-10 mx-auto my-4 bg-info" style={{height: "2px"}}/>
             <div className="row">

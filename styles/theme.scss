@@ -1,7 +1,11 @@
 //@import "main";
 
 :root{
-  --light: aliceblue!important;
+  --bs-light: aliceblue!important;
+  --bs-body-color: var(--bs-gray-dark);
+  --bs-dark: var(--bs-gray-dark);
+  --dark: var(--bs-dark);
+  --primary: var(--bs-primary)
 }
 
 
@@ -9,7 +13,7 @@ body{
 
   @media (prefers-color-scheme: light) {
 
-    color: var(--dark);
+    color: var(--bs-dark);
     //color: red;
     background-color: #f1f1f1;
     //::-webkit-scrollbar {
@@ -49,9 +53,9 @@ body{
   }
   
   @media (prefers-color-scheme: dark) {
-    color: var(--light);
+    color: var(--bs-light);
     //color: red;
-    background-color: var(--dark)!important;
+    background-color: var(--bs-gray-dark)!important;
     ::-webkit-scrollbar {
       width: 10px;
       border-radius: 2rem;

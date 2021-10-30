@@ -1,7 +1,15 @@
 @import "~bootstrap/dist/css/bootstrap.min.css";
 
-body{
 
+
+body{
+  .btn-dark{
+    //background-color: var(--bs-gray-dark);
+    background-color: var(--bs-dark);
+    &:hover{
+      background-color: #23272b;
+    }
+  }
 }
 
 
@@ -68,7 +76,7 @@ body{
   border-width: 2px;
   border-style: solid;
   border-radius: 10px;
-  border-color: var(--primary);
+  border-color: var(--bs-primary);
   padding: 10px 20px 10px 20px;
   cursor: pointer;
   transition: all linear 0.5s;
@@ -166,7 +174,7 @@ body{
   }
 }
 .bm-menu-wrap{
-  border-left: 1px solid var(--primary);
+  border-left: 1px solid var(--bs-primary);
 }
 
 .secret-icon{
@@ -237,6 +245,15 @@ body{
 
 .card .form-group{
   margin-bottom: 0;
+}
+
+.bm-burger-button{
+  @media (max-width: 576px) {
+    right: 8%!important;
+  }
+  @media (min-width: 768px) {
+    right: 10%!important;
+  }
 }
 
 

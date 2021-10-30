@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import {AvForm, AvField} from 'availity-reactstrap-validation'
-import {NextSeo} from "next-seo"
 import {useRouter} from "next/router"
 import {useThemeDetector} from "../../toolsOfProject"
 import {
