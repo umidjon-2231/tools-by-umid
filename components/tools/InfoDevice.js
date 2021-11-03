@@ -78,21 +78,15 @@ const InfoDevice = () => {
                                 </div>
                             )
                         })}
-                        <div className="col-12 col-sm-6 col-lg-2 ml-lg-auto">
+                        <div className="col-12 col-sm-6 col-lg-2 ms-lg-auto">
                             <button
                                 type='button'
                                 onClick={()=>setChange(!change)}
                                 className={`btn w-100 border-success ${isDarkTheme?'btn-dark':'btn-light'}`}
                             >Refresh</button>
                         </div>
-
-
                     </div>
-
-
-
                 </div>
-
             </div>
         </Navbar>
     );

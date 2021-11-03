@@ -264,7 +264,7 @@ const Secrets = () => {
 
     return (
         <Navbar name='Secrets'>
-           <Title />
+           <Title name='Secrets'/>
             {loading?<Loader/>:''}
             <Modal isOpen={checkModal} toggle={toggle}>
                 <ModalHeader>
@@ -725,7 +725,7 @@ const Secrets = () => {
                                 </button>
 
                                 <button
-                                    className={`btn ml-3 ${isDarkTheme?'btn-dark border-success':'btn-success'}`}
+                                    className={`btn ms-3 ${isDarkTheme?'btn-dark border-success':'btn-success'}`}
                                     type='button'
                                     onClick={newSecretToggle}
 
@@ -750,7 +750,7 @@ const Secrets = () => {
 
                                                     <DropdownToggle color='transparent'
                                                                     onClick={(event)=>{event.stopPropagation()}}
-                                                                    className={`ml-auto d-block`}>
+                                                                    className={`ms-auto d-block`}>
 
                                                         <img
                                                             src={`/icons/three-points-icon-${nameTheme}.png`}

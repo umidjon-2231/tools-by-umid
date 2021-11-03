@@ -199,7 +199,7 @@ const LinkSave = () => {
 
     return (
         <Navbar name='Link save'>
-            <Title/>
+            <Title name='Link save'/>
             {loading?<Loader/>:''}
 
 
@@ -296,8 +296,8 @@ const LinkSave = () => {
                 </ModalFooter>
             </Modal>
 
-            <Modal isOpen={viewModal} toggle={toggleView}>
-                <ModalHeader>Vew link</ModalHeader>
+            <Modal isOpen={viewModal} centered={true} toggle={toggleView}>
+                <ModalHeader toggle={toggleView}>Vew link</ModalHeader>
                 <ModalBody>
                     <AvForm>
                         <AvField
@@ -388,19 +388,18 @@ const LinkSave = () => {
                 {/*<div className=" col-10 mx-auto my-4 bg-info" style={{height: "2px"}}/>*/}
 
                 <div className="row align-items-center" style={{paddingLeft: 10, paddingRight: 10}}>
-
                     <div className="col-lg-8 col-sm-6 col-12">
-                        <div className="col-lg-6 col-12 input-group px-0">
+                        <div className="input-group col-md-6 px-0">
                             <input type="search" name="search"
                                    className='form-control' autoComplete='off'
                                    placeholder='Search'
                                    id="search" onChange={(e)=>{searchResult(e.target.value)}}
                             />
-                            <div className="input-group-append">
-                                <span className="input-group-text bg-transparent">
-                                    <img src="/icons/search-icon.png" alt="" width={20}/>
-                                </span>
-                            </div>
+
+                            <span className="input-group-text  bg-transparent">
+                                <img src="/icons/search-icon.png" alt="" width={20}/>
+                            </span>
+
                         </div>
                     </div>
                     <div className="col-lg-4 col-sm-6 col-12 mt-3 mt-sm-0 d-flex justify-content-end">
@@ -414,7 +413,7 @@ const LinkSave = () => {
                             </button>
 
                             <button
-                                className={`btn ml-3 ${isDarkTheme?'btn-dark border-success':'btn-success'}`}
+                                className={`btn ms-md-3 ms-auto ${isDarkTheme?'btn-dark border-success':'btn-success'}`}
                                 type='button'
                                 onClick={toggle}
 
@@ -445,7 +444,7 @@ const LinkSave = () => {
                                             <UncontrolledDropdown size='sm'>
                                                 <DropdownToggle color='transparent'
                                                                 onClick={(event)=>{event.stopPropagation()}}
-                                                                className={`ml-auto d-block`}>
+                                                                className={`ms-auto d-block`}>
                                                     <img
                                                         src={`/icons/three-points-icon-${nameTheme}.png`}
                                                         alt=""/>

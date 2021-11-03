@@ -32,10 +32,5 @@
   },
   "devDependencies": {
     "concurrently": "^6.2.1"
-  },
-  "browser": {
-    "fs": false,
-    "path": false,
-    "os": false
   }
 }
