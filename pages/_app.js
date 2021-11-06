@@ -22,11 +22,11 @@ function MyApp({ Component, pageProps }) {
     const [loading, setLoading]=useState(true)
     const store = useStore(pageProps.initialReduxState)
 
-
-    useEffect(async ()=>{
-        // setLoading(false)
-
-    }, [Component])
+    //
+    // useEffect(async ()=>{
+    //     // setLoading(false)
+    //
+    // }, [Component])
 
 
 

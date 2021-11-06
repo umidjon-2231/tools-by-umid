@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react"
 import {toast} from "react-toastify"
+import jwt from "jsonwebtoken";
 
 
 export const useThemeDetector = () => {
@@ -87,6 +88,27 @@ export const setCookie=(cname, cvalue, expired)=> {
 
 export const deleteCookie=(name)=>{
     document.cookie=`${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
+}
+
+export const getToken=async (ctx)=>{
+    let token;
+    if(ctx.req){
+        token=getCookies('token',ctx.req.headers.cookie)
+    }else {
+        token=getCookies('token', document.cookie)
+    }
+    try {
+        await jwt.verify(token, process.env.jwtSecret)
+    }catch (e) {
+        // if(ctx.res){
+        //     await ctx.res.writeHead(307, {Location: '/'}).end()
+        // }else{
+        //     window.location='/'
+        //     await new Promise((resolve) => {})
+        // }
+        return null
+    }
+    return token
 }
 
 

@@ -1,7 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import {AvForm, AvField} from 'availity-reactstrap-validation'
 import {useRouter} from "next/router"
-import {useThemeDetector} from "../../toolsOfProject"
+import {Router} from "next/router";
+import {getCookies, useThemeDetector} from "../../toolsOfProject"
 import {
     Modal,
     ModalHeader,
@@ -18,9 +19,10 @@ import {useAuth} from "../../hooks/auth.hook"
 import Navbar from "../Navbar"
 import Title from "../Title";
 import {useDispatch, useSelector} from "react-redux";
-import {toggleModal} from "../../redux/actions/linkSave.action";
+import axios from "axios";
 
-const LinkSave = () => {
+const LinkSave = ({props}) => {
+
 
     const [modal, setModal]=useState(false)
     const [filterModal, setFilterModal]=useState(false)
@@ -28,8 +30,8 @@ const LinkSave = () => {
     const [viewLink, setViewLink]=useState({})
     const [deleteModal, setDeleteModal]=useState(false)
     const [loading, setLoading]=useState(false)
-    const [links, setLinks]=useState([])
-    const [content, setContent]=useState([])
+    const [links, setLinks]=useState(props.links)
+    const [content, setContent]=useState(props.links)
     const [editItem, setEditItem]=useState({})
     const [deleteItem, setDeleteItem]=useState({})
     const [filterMode, setFilterMode]=useState({
@@ -40,13 +42,17 @@ const LinkSave = () => {
 
     const {isDarkTheme, nameTheme}=useThemeDetector()
     const {request}=useHttp()
-    const {token, takeToken}=useAuth()
+    const {takeToken}=useAuth()
     const dispatch=useDispatch()
     const linkSaveState=useSelector((state)=>state.linkSave)
 
+
     useEffect(()=>{
         // dispatch(toggleModal())
-       getLinks()
+        axios.get("http://localhost:3000/icons/main-logo-png.png")
+            .then((res)=>{
+
+            })
     }, [])
 
     const toggle=()=>{
@@ -71,7 +77,6 @@ const LinkSave = () => {
 
     const getLinks=async ()=>{
         setLoading(true)
-
         const newToken=await takeToken()
         const res=await request('/api/link/get-link', 'GET', null,
             {
@@ -81,11 +86,6 @@ const LinkSave = () => {
             await setContent(res.data)
             await filterChange('', filterMode, res.data)
         }
-        if(res.status===400){
-
-        }
-
-
 
         setLoading(false)
     }
@@ -427,7 +427,7 @@ const LinkSave = () => {
                 <div className="content link border-top border-primary mt-3">
                     <div className="row ">
 
-                        {links.length!==0?links.map((i,n)=>{
+                        {links!==null?links.map((i,n)=>{
                             const domainName=(url)=>{
                                 url=url.replace('http://', '')
                                 url=url.replace('https://', '')
@@ -506,5 +506,7 @@ const LinkSave = () => {
 
     );
 };
+
+
 
 export default LinkSave;

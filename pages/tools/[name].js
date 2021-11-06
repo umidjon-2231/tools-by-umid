@@ -8,11 +8,13 @@ import Secrets from "../../components/tools/Secrets"
 import InfoDevice from "../../components/tools/InfoDevice"
 import Settings from "../../components/Settings"
 import Loader from "../../components/Loader"
+import {getProps} from "../../page-get-props/link-save";
+import {getToken} from "../../toolsOfProject";
 
-const Name = () => {
+const Name = ({props, token}) => {
     const [loading, setLoading]=useState(true)
     const router=useRouter()
-    const {token}=useAuth()
+
     useEffect(()=>{
         setLoading(false)
     }, [])
@@ -25,21 +27,20 @@ const Name = () => {
     if(token!==null){
         switch (router.query.name) {
             case "decoder": {
-                return <Decoder/>
+                return <Decoder props={props}/>
             }
             case "link-save": {
-                return <LinkSave/>
+                return <LinkSave props={props}/>
             }
             case "secrets": {
-                return <Secrets/>
+                return <Secrets props={props}/>
             }
             case "info-device":{
-                return <InfoDevice/>
+                return <InfoDevice props={props}/>
             }
             case "settings":{
-                return <Settings/>
+                return <Settings props={props}/>
             }
-
             default: {
                 return <Custom404/>
             }
@@ -47,5 +48,15 @@ const Name = () => {
     }
     return <Custom404/>
 };
+
+Name.getInitialProps=async (ctx)=>{
+    let token=await getToken(ctx)
+    if(!token){
+        return {token: null}
+    }
+    let props={}
+    props=await getProps(ctx, token)
+    return {props, token}
+}
 
 export default Name;

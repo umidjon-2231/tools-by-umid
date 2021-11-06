@@ -1,7 +1,7 @@
 import {useAuth} from "../hooks/auth.hook"
 import Auth from "../components/Auth"
 import {useRouter} from "next/router"
-import {getCookies} from "../toolsOfProject";
+import {getCookies, getToken} from "../toolsOfProject";
 import jwt from "jsonwebtoken";
 
 export default function Home() {
@@ -10,17 +10,9 @@ export default function Home() {
 }
 
 Home.getInitialProps=async (ctx)=>{
-  let token;
-  if(ctx.req){
-    token=getCookies('token', ctx.req.headers.cookie)
-  }else{
-    token=getCookies('token', document.cookie)
+  let token=await getToken(ctx)
+  if(token){
+    ctx.res.writeHead(302, { Location: '/tools' }).end()
   }
-  try {
-    await jwt.verify(token, 'Umidjon2231')
-  }catch (e) {
-    return {}
-  }
-  ctx.res.writeHead(302, { Location: '/tools' }).end()
   return {}
 }
