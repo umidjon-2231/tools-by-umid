@@ -11,6 +11,7 @@ import Loader from "../../components/Loader"
 import {getProps} from "../../page-get-props/link-save";
 import {getToken} from "../../toolsOfProject";
 import Iframe from "../../components/tools/Iframe";
+import absoluteUrl from "next-absolute-url/index";
 
 const Name = ({props, token}) => {
     const [loading, setLoading]=useState(true)
@@ -59,7 +60,13 @@ Name.getInitialProps=async (ctx)=>{
         return {token: null}
     }
     let props={}
-    props=await getProps(ctx, token)
+    let host;
+    if(ctx.req){
+        host=absoluteUrl(ctx.req).origin
+    }else {
+        host=""
+    }
+    props=await getProps(ctx, token, host)
     return {props, token}
 }
 
