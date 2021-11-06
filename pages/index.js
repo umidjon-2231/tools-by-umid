@@ -12,7 +12,12 @@ export default function Home() {
 Home.getInitialProps=async (ctx)=>{
   let token=await getToken(ctx)
   if(token){
-    ctx.res.writeHead(302, { Location: '/tools' }).end()
+    if(ctx.res){
+      ctx.res.writeHead(302, { Location: '/tools' }).end()
+    }else{
+      window.location="/tools"
+    }
+
   }
   return {}
 }
