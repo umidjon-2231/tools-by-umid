@@ -12,13 +12,9 @@ const Homepage = () => {
 
 
     useEffect(()=>{
-
         // setContent(content.sort((a, b)=>
         //    a.name.localeCompare(b.name)
         // ))
-
-
-
     }, [])
 
 

@@ -49,10 +49,7 @@ const LinkSave = ({props}) => {
 
     useEffect(()=>{
         // dispatch(toggleModal())
-        axios.get("http://localhost:3000/icons/main-logo-png.png")
-            .then((res)=>{
 
-            })
     }, [])
 
     const toggle=()=>{

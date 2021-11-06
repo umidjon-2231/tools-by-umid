@@ -10,6 +10,7 @@ import Settings from "../../components/Settings"
 import Loader from "../../components/Loader"
 import {getProps} from "../../page-get-props/link-save";
 import {getToken} from "../../toolsOfProject";
+import Iframe from "../../components/tools/Iframe";
 
 const Name = ({props, token}) => {
     const [loading, setLoading]=useState(true)
@@ -40,6 +41,9 @@ const Name = ({props, token}) => {
             }
             case "settings":{
                 return <Settings props={props}/>
+            }
+            case "iframe":{
+                return <Iframe/>
             }
             default: {
                 return <Custom404/>
