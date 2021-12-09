@@ -16,13 +16,27 @@ const InfoDevice = () => {
     const router=useRouter()
     const [change, setChange]=useState(false)
     useEffect(()=>{
-        info()
-        window.addEventListener('resize', ()=>{setChange(!change)})
+        info().then(()=>{
+            window.addEventListener('resize', ()=>{setChange(!change)})
+            Notification.requestPermission((res)=>{
+                if(res==="granted"){
+                    setTimeout(()=>{
+                        let opt={
+                            body: "Click me!",
+                            icon: "https://tools-by-umid.vercel.app/icons/main-logo-ico.ico",
+                        }
+                        let e=new Notification("Hello Umid", opt)
+                        e.onclick=(ev)=>{
+                            console.log(ev)
+                        }
+                    }, 3000)
+
+
+                }
+            })
+        })
     }, [])
 
-    useEffect(()=>{
-        info()
-    }, [change])
 
     const info=async ()=>{
         setLoading(true)

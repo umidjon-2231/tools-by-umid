@@ -18,8 +18,13 @@ export default function Auth() {
     const {isDarkTheme}=useThemeDetector()
 
     useEffect(()=>{
-
-
+        window.OneSignal = window.OneSignal || [];
+        OneSignal.push(function() {
+            OneSignal.init({
+                    appId: "6e9a6a88-1944-41ca-a308-28ea3cd62d95",
+                    allowLocalhostAsSecureOrigin: true,
+            })
+        })
 
     }, [])
 

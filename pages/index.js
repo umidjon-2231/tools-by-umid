@@ -5,7 +5,6 @@ import {getCookies, getToken} from "../toolsOfProject";
 import jwt from "jsonwebtoken";
 
 export default function Home() {
-  const {token}=useAuth()
   return <Auth/>;
 }
 

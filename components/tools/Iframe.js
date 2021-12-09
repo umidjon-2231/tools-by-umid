@@ -1,13 +1,15 @@
 import React, {useState} from 'react';
 import {AvForm, AvField} from "availity-reactstrap-validation"
 import axios from "axios";
+import {useHttp} from "../../hooks/https.hook";
 
 const Iframe = () => {
     const [data, setData]=useState("")
-
+    const {request}=useHttp()
     const set = async (e, v) => {
-        let res=await axios.get(v.url, {headers: {"Content-type": "text/html"}})
-        setData(res.data)
+        const response=await request("/api/iframe", "POST", {url: v.url}, {"Content-type": "text/html"})
+        setData(""+response.data)
+
     }
 
     return (
@@ -20,9 +22,7 @@ const Iframe = () => {
                     </AvForm>
                 </div>
             </div>
-
-            {data?data:""}
-
+            {data? <iframe src={data} width="1000px" height={800}/>:""}
         </div>
     );
 };

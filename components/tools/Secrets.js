@@ -253,11 +253,8 @@ const Secrets = () => {
                 let check=a.content.whoKnow.toString()
                 return check.search(reg)!==-1
             }
-
         })
-
         setContent(filteredArray)
-
     }
 
 
