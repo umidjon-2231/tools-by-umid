@@ -16,7 +16,6 @@ class MyDocument extends Document {
                 <body>
                 <Main />
                 <NextScript />
-                <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""/>
                 </body>
             </Html>
         )
