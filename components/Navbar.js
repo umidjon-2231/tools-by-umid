@@ -56,7 +56,7 @@ const Navbar = ({name, children}) => {
         <div className='container homepage pl-2 right' id='outer-container' >
             <div className="d-flex container justify-content-between ">
                 <h1 className="mt-5 " >{name}</h1>
-                <Menu styles={styles} noOverlay right outerContainerId={ "outer-container"} pageWrapId={ "page-wrap" }>
+                <Menu styles={styles} noOverlay right>
                     <div className="d-flex">
                         <p className='font-weight-bold' style={{cursor: 'pointer'}} onClick={()=>{router.back()}}>&#x2190;Back</p>
                     </div>
@@ -86,7 +86,7 @@ const Navbar = ({name, children}) => {
             </div>
 
 
-            <main id='page-wrap'>
+            <main id=''>
                 <div className=" col mx-auto mt-2 mb-4 bg-primary" style={{height: "2px"}}/>
                 <div className="">
                     {children}

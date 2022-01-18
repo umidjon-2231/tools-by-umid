@@ -30,8 +30,6 @@ const InfoDevice = () => {
                             console.log(ev)
                         }
                     }, 3000)
-
-
                 }
             })
         })

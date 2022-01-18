@@ -113,7 +113,7 @@ const LinkSave = ({props}) => {
                 lastEdited: Date.now()
                 },
                 {
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${props.token}`
                 })
             if(res.status===201){
                 toast.success(res.message)
@@ -415,7 +415,6 @@ const LinkSave = ({props}) => {
                                 onClick={toggle}
 
                             >Add link</button>
-
                     </div>
 
 
