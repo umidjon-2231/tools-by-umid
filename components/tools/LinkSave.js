@@ -280,9 +280,25 @@ const LinkSave = ({props}) => {
                 <ModalBody>
                     Do you want to delete this link?(Click to card for view info of link)
                     <div className="col-12 content my-3">
-                        <div className="custom-card" onClick={()=>{setViewLink(deleteItem);toggleView()}}>
+                        <div className="custom-card" onClick={()=>{setViewLink(deleteItem);toggleView()}}
+
+                        >
                             {deleteItem._id?<div>
-                            <a href={deleteItem?.link} rel='noreferrer' target='_blank'>{deleteItem?.link}</a>
+                            <a href={deleteItem?.link} rel='noreferrer'
+                               className=''
+                               target='_blank'>
+                                <p
+                                    style={{
+                                        textOverflow: 'ellipsis',
+                                        whiteSpace: 'break-spaces',
+                                        overflow: 'hidden',
+                                        fontWeight: 'normal',
+                                        // fontSize: '1rem'
+                                    }}
+                                >
+                                    {deleteItem?.link}
+                                </p>
+                            </a>
                             </div>:''}
                         </div>
                     </div>
