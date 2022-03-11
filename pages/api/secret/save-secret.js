@@ -12,9 +12,10 @@ const saveLink=async (req, res)=>{
                 throw new Error('Not authorization!!!')
             }
             const token=req.headers.authorization.split(' ')[1];
-
+            let userId=""
             try{
-                await jwt.verify(token, process.env.jwtSecret)
+                const parsedToken=await jwt.verify(token, process.env.jwtSecret)
+                userId=parsedToken.userId
             }catch (e) {
                 return res.status(401).json({message: e.message, status: 401})
             }
@@ -31,7 +32,8 @@ const saveLink=async (req, res)=>{
                 content: hashedContent,
                 category,
                 date: Date.now(),
-                lastEdited: Date.now()
+                lastEdited: Date.now(),
+                user: userId
             });
             await secret.save();
             res.status(201).json({

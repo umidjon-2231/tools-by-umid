@@ -6,12 +6,11 @@ import connectDB from "../../../middleware/mongodb"
 const handler=async (req, res)=> {
     if(req.method==="POST"){
         try {
-            const {password}=req.body
+            const {password, login}=req.body
             if(!req.headers.authorization){
                 throw new Error('Not authorization!!')
             }
             const tokenS=req.headers.authorization.split(' ')[1];
-
             try{
                 await jwt.verify(tokenS, process.env.jwtSecret)
             }catch (e) {
@@ -21,16 +20,17 @@ const handler=async (req, res)=> {
 
 
 
-            const user=await User.findOne({password})
+            const user=await User.findOne({password, login})
             if(!user){
-                return res.status(400).json({message: "Error password", status: 400})
+                return res.status(400).json({message: "Error password or login", status: 400})
             }
 
             const secretKey=process.env.jwtSecret
 
             const token=jwt.sign(
                 {
-                    password
+                    password,
+                    userId: user._id
                 },
                 secretKey,
                 {expiresIn: '1h'}

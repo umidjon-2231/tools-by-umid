@@ -139,7 +139,7 @@ const LinkSave = ({props}) => {
         }else{
             toast.error(res.message)
         }
-        getLinks()
+        await getLinks()
         toggleDelete()
     }
 
@@ -423,7 +423,7 @@ const LinkSave = ({props}) => {
                 <div className="content link border-top border-primary mt-3">
                     <div className="row ">
 
-                        {links!==null?links.map((i,n)=>{
+                        {links!==null && links.length>0?links.map((i,n)=>{
                             const domainName=(url)=>{
                                 url=url.replace('http://', '')
                                 url=url.replace('https://', '')

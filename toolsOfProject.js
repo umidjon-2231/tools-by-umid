@@ -36,11 +36,11 @@ export const filterSpaceOfString=(text)=>{
 
 
 export const tools=[
-    {
-        name: 'Decoder',
-        url: '/decoder',
-        src: 'decode-icon.png'
-    },
+    // {
+    //     name: 'Decoder',
+    //     url: '/decoder',
+    //     src: 'decode-icon.png'
+    // },
     {
         name: 'Link save',
         url: '/link-save',

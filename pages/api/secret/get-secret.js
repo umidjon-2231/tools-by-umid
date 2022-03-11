@@ -10,9 +10,10 @@ const getLink=async (req, res)=> {
                 throw new Error('Not authorization!')
             }
             const token=req.headers.authorization.split(' ')[1];
-
+            let userId=""
             try{
-                await jwt.verify(token, process.env.jwtSecret)
+                const parsedToken=await jwt.verify(token, process.env.jwtSecret)
+                userId=parsedToken.userId
             }catch (e) {
                 return res.status(401).json({
                     message: 'There is no space on the server for hackers',
@@ -20,7 +21,7 @@ const getLink=async (req, res)=> {
                     status: 401
                 })
             }
-            const hasSecret=await Secret.find()
+            const hasSecret=await Secret.find({user: userId})
 
             res.status(200).json({message: 'Ok!', status: 200, data:  hasSecret})
 

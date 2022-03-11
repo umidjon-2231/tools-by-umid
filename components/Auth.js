@@ -28,9 +28,9 @@ export default function Auth() {
             return
         }
         setLoading(true)
-        const {password}=value
+        const {password, login}=value
         try {
-            const data=await request('/api/auth/login', 'POST', {password})
+            const data=await request('/api/auth/login', 'POST', {password, login})
             if(data.status!==200){
                 window.navigator.vibrate(290)
                 setLoading(false)
@@ -61,12 +61,12 @@ export default function Auth() {
                     <div className="card">
                         <AvForm onValidSubmit={loginHandler}>
                             <div className="card-body">
-                                <AvField type='text' name='login' value='admin' className='d-none'/>
+                                <AvField type='text' name='login' placeholder="Login"/>
                                 <AvField
                                     type="password"
                                     name="password"
+                                    className='mt-2'
                                     placeholder="Password"
-
                                 />
                             </div>
                             <div className="card-footer py-2 d-flex justify-content-between">

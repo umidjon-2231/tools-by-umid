@@ -4,6 +4,7 @@ const mongoose=require('mongoose')
 
 const schema=new Schema({
     password: {type:String, required: true},
+    login: {type: String, required: true}
 })
 
 module.exports=mongoose.models.User || mongoose.model('User', schema)

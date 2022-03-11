@@ -1,3 +1,5 @@
+import {FilterQuery} from "mongoose";
+
 const Link=require('../../../models/link')
 import connectDB from "../../../middleware/mongodb"
 const jwt=require('jsonwebtoken')
@@ -10,17 +12,17 @@ const getLink=async (req, res)=> {
                 throw new Error('Not authorization!')
             }
             const token=req.headers.authorization.split(' ')[1];
-
+            let userId=""
             try{
-                await jwt.verify(token, process.env.jwtSecret)
+                const parsedToken=await jwt.verify(token, process.env.jwtSecret)
+                userId=parsedToken.userId;
             }catch (e) {
                 return res.status(401).json({
                     message: 'There is no space on the server for hackers',
-                    // message: e.message,
                     status: 401
                 })
             }
-            const hasLink=await Link.find()
+            const hasLink=await Link.find({user: userId})
 
             res.status(200).json({message: 'Ok!', status: 200, data:  hasLink})
 

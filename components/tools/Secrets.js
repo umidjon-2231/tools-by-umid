@@ -81,9 +81,15 @@ const Secrets = () => {
 
     const checkPassword=async (event, values)=>{
         setLoading(true)
-        const data=await request('/api/auth/login', 'POST', {password: values.password}, {
-            Authorization: `Bearer ${token}`
-        })
+        const data=await request('/api/auth/login', 'POST',
+            {
+                password: values.password,
+                login: values.login
+            },
+            {
+                Authorization: `Bearer ${token}`
+            }
+        )
         try{
             await jwt.verify(data.token, process.env.jwtSecret)
         }catch (e) {setLoading(false);window.navigator.vibrate(290);return}
@@ -269,7 +275,12 @@ const Secrets = () => {
                 </ModalHeader>
                 <AvForm onValidSubmit={checkPassword}>
                     <ModalBody>
-                        <AvField type='text' name='login' value={'admin'} className='d-none'/>
+                        <AvField type='text' name='login' placeholder="Login"
+                                 validate={{
+                                     required: {value: true, errorMessage: 'Enter login for view secrets'},
+                                     minLength: {value: 4, errorMessage: 'Login must be minimum 4 length'}
+                                 }}
+                        />
                         <AvField
                             type='password'
                             name='password'
@@ -600,7 +611,7 @@ const Secrets = () => {
                                         name='owner' placeholder='Enter a full name of secret owner'
                                         autoComplete='off'
                                         value={viewItem.content?.owner}
-                                        label={'Owner: '}
+                                        label='Owner: '
                                         disabled={true}
                                         validate={{
                                             required: {value: true, errorMessage: 'Please enter a full name of secret owner'},
@@ -786,7 +797,7 @@ const Secrets = () => {
                                                 </UncontrolledDropdown>
                                                 <div className="body-link">
                                                     <h4 style={{fontSize: '1rem',
-                                                        textShadow: `0 0 10px ${isDarkTheme?'#fff':'#000'}, 0 0 5px ${isDarkTheme?'#fff':'#000'}`
+                                                        // textShadow: `0 0 10px ${isDarkTheme?'#fff':'#000'}, 0 0 5px ${isDarkTheme?'#fff':'#000'}`
                                                     }}>
                                                         {(()=>{
                                                             switch (i.category){
