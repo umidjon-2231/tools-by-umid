@@ -9,8 +9,8 @@ module.exports = {
         jwtSecret: "Umidjon2231",
         storageName: "userData",
         token: "IGQVJVWHNhLUxjU0lQalk1S0JkN1JJVzlqU3RFbDNsanpoLVRYM21GTmpyZA05qdFdLb2w3S0NvMGtwZAUd2TWh6VUIxUi1wZAURyeFhVSmxkLVhJcmZAqd2huZAkpUMTE4SXFRaW9vWURkMFRBMGEzaXltMQZDZD",
-        username: 't_umidcheek',
-        password: '911368169umid'
+        reCaptcha_site_key: "6LfK_zcfAAAAAHeJOaSJHR2rhr5f8Sx7KtOzUgqr",
+        reCaptcha_secret: "6LfK_zcfAAAAAJ2p9ivyNnES21eetrRCi7px0IhZ"
     }
 
 }
